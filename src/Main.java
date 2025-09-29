@@ -27,6 +27,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeParseException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
@@ -150,9 +151,10 @@ public class Main {
             System.out.println("7. Registrar pago y confirmar inscripcion");
             System.out.println("8. Registrar resultado");
             System.out.println("9. Publicar mensaje general");
-            System.out.println("10. Ver chat general");
-            System.out.println("11. Enviar mensaje a corredor");
-            System.out.println("12. Agregar recurso multimedia a evento");
+            System.out.println("10. Actualizar estado de evento");
+            System.out.println("11. Ver chat general");
+            System.out.println("12. Enviar mensaje a corredor");
+            System.out.println("13. Agregar recurso multimedia a evento");
             System.out.println("0. Cerrar sesion");
             int opcion = leerEntero("Seleccione una opcion: ");
             switch (opcion) {
@@ -184,12 +186,15 @@ public class Main {
                     publicarMensajeGeneral(comunicacionService, administrador, administradores, corredores);
                     break;
                 case 10:
-                    mostrarChatGeneral(comunicacionService);
+                    actualizarEstadoEvento(eventoService);
                     break;
                 case 11:
-                    enviarMensajeACorredor(comunicacionService, administrador, corredores);
+                    mostrarChatGeneral(comunicacionService);
                     break;
                 case 12:
+                    enviarMensajeACorredor(comunicacionService, administrador, corredores);
+                    break;
+                case 13:
                     agregarMultimediaAEvento(eventoService);
                     break;
                 case 0:
@@ -440,9 +445,43 @@ public class Main {
             System.out.println("Tipos de sangre disponibles: " + Arrays.toString(TipoSangre.values()));
             System.out.print("Tipo de sangre: ");
             TipoSangre tipoSangre = TipoSangre.valueOf(SCANNER.nextLine().trim().toUpperCase());
+
+            List<ContactoEmergencia> contactos = new ArrayList<>();
+            while (true) {
+                System.out.print("Nombre de contacto de emergencia (vacio para terminar): ");
+                String nombreContacto = SCANNER.nextLine().trim();
+                if (nombreContacto.isEmpty()) {
+                    if (contactos.isEmpty()) {
+                        System.out.println("Registro cancelado. Debe registrar al menos un contacto de emergencia.");
+                        return;
+                    }
+                    break;
+                }
+                System.out.print("Telefono del contacto: ");
+                String telefonoContacto = SCANNER.nextLine().trim();
+                if (telefonoContacto.isEmpty()) {
+                    System.out.println("El telefono del contacto no puede estar vacio.");
+                    continue;
+                }
+                System.out.print("Relacion con el contacto: ");
+                String relacion = SCANNER.nextLine().trim();
+                if (relacion.isEmpty()) {
+                    System.out.println("La relacion con el contacto no puede estar vacia.");
+                    continue;
+                }
+                try {
+                    contactos.add(new ContactoEmergencia(nombreContacto, telefonoContacto, relacion));
+                    System.out.println("Contacto agregado.");
+                } catch (IllegalArgumentException ex) {
+                    System.out.println("No se pudo registrar el contacto: " + ex.getMessage());
+                    continue;
+                }
+            }
+
             String idCorredor = "COR-" + (corredores.size() + 1);
             Corredor corredor = new Corredor(idCorredor, correo, contrasena, idCorredor, nombre,
                     telefono, fechaNacimiento, genero, tipoSangre);
+            contactos.forEach(corredor::agregarContacto);
             corredores.put(correo, corredor);
             System.out.println("Corredor registrado correctamente.");
         } catch (IllegalArgumentException ex) {
@@ -533,6 +572,34 @@ public class Main {
         }
     }
 
+    private static void actualizarEstadoEvento(EventoService eventoService) {
+        System.out.println("\n--- Actualizar Estado de Evento ---");
+        listarEventos(eventoService);
+        System.out.print("ID del evento a actualizar: ");
+        String idEvento = SCANNER.nextLine().trim();
+        Optional<Evento> eventoOpt = eventoService.buscarPorId(idEvento);
+        if (!eventoOpt.isPresent()) {
+            System.out.println("Evento no encontrado.");
+            return;
+        }
+        System.out.println("Estados disponibles: " + Arrays.toString(EstadoEvento.values()));
+        System.out.print("Nuevo estado: ");
+        String nuevoEstadoTexto = SCANNER.nextLine().trim();
+        Optional<EstadoEvento> estadoSeleccionado = Arrays.stream(EstadoEvento.values())
+                .filter(estado -> estado.name().equalsIgnoreCase(nuevoEstadoTexto))
+                .findFirst();
+        if (!estadoSeleccionado.isPresent()) {
+            System.out.println("Estado invalido.");
+            return;
+        }
+        try {
+            eventoService.actualizarEstado(idEvento, estadoSeleccionado.get());
+            System.out.println("Estado del evento actualizado a " + estadoSeleccionado.get() + ".");
+            listarEventos(eventoService);
+        } catch (IllegalArgumentException ex) {
+            System.out.println("No se pudo actualizar el estado del evento: " + ex.getMessage());
+        }
+    }
     private static void publicarMensajeGeneral(ComunicacionService comunicacionService, Administrador administrador,
                                                Map<String, Administrador> administradores,
                                                Map<String, Corredor> corredores) {

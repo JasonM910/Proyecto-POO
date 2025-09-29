@@ -46,7 +46,7 @@ public class Competidor extends Usuario {
     }
 
     public List<Mensaje> getMensajes() {
-        return List.copyOf(mensajes);
+        return new ArrayList<>(mensajes);
     }
 
     public void agregarMensaje(Mensaje mensaje) {

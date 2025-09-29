@@ -47,7 +47,7 @@ public class Multimedia {
     }
 
     public List<String> getComentarios() {
-        return List.copyOf(comentarios);
+        return new ArrayList<>(comentarios);
     }
 
     public void agregarComentarios(String comentario) {

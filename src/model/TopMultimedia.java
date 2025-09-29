@@ -13,10 +13,17 @@ public class TopMultimedia {
     public void agregarMultimedia(Multimedia recurso) {
         Objects.requireNonNull(recurso, "El recurso multimedia no puede ser nulo");
         switch (recurso.getTipo().toLowerCase()) {
-            case "imagen" -> imagenes.add(recurso);
-            case "video" -> videos.add(recurso);
-            case "podcast" -> podcasts.add(recurso);
-            default -> throw new IllegalArgumentException("Tipo de multimedia no soportado: " + recurso.getTipo());
+            case "imagen":
+                imagenes.add(recurso);
+                break;
+            case "video":
+                videos.add(recurso);
+                break;
+            case "podcast":
+                podcasts.add(recurso);
+                break;
+            default:
+                throw new IllegalArgumentException("Tipo de multimedia no soportado: " + recurso.getTipo());
         }
     }
 

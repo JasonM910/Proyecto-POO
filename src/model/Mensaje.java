@@ -1,4 +1,4 @@
-﻿package model;
+package model;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
@@ -9,13 +9,20 @@ public class Mensaje {
     private LocalDateTime enviadoEn;
     private final Usuario remitente;
     private final Usuario destinatario;
+    private final boolean general;
 
-    public Mensaje(String idMensaje, String contenido, LocalDateTime enviadoEn, Usuario remitente, Usuario destinatario) {
+    public Mensaje(String idMensaje, String contenido, LocalDateTime enviadoEn, Usuario remitente, Usuario destinatario,
+                    boolean general) {
         this.idMensaje = Objects.requireNonNull(idMensaje, "El identificador del mensaje no puede ser nulo");
         this.contenido = Objects.requireNonNull(contenido, "El contenido no puede ser nulo");
         this.enviadoEn = Objects.requireNonNull(enviadoEn, "La fecha de envio no puede ser nula");
         this.remitente = Objects.requireNonNull(remitente, "El remitente no puede ser nulo");
-        this.destinatario = Objects.requireNonNull(destinatario, "El destinatario no puede ser nulo");
+        this.general = general;
+        if (general) {
+            this.destinatario = destinatario;
+        } else {
+            this.destinatario = Objects.requireNonNull(destinatario, "El destinatario no puede ser nulo");
+        }
     }
 
     public String getIdMensaje() {
@@ -44,5 +51,9 @@ public class Mensaje {
 
     public Usuario getDestinatario() {
         return destinatario;
+    }
+
+    public boolean esGeneral() {
+        return general;
     }
 }

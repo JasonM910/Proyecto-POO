@@ -8,6 +8,7 @@ import model.EstadoEvento;
 import model.EstadoInscripcion;
 import model.Genero;
 import model.Inscripcion;
+import model.Mensaje;
 import model.Multimedia;
 import model.Pago;
 import model.Resultado;
@@ -28,9 +29,11 @@ import java.time.LocalTime;
 import java.time.format.DateTimeParseException;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.Scanner;
 
 public class Main {
@@ -147,8 +150,9 @@ public class Main {
             System.out.println("7. Registrar pago y confirmar inscripcion");
             System.out.println("8. Registrar resultado");
             System.out.println("9. Publicar mensaje general");
-            System.out.println("10. Enviar mensaje a corredor");
-            System.out.println("11. Agregar recurso multimedia a evento");
+            System.out.println("10. Ver chat general");
+            System.out.println("11. Enviar mensaje a corredor");
+            System.out.println("12. Agregar recurso multimedia a evento");
             System.out.println("0. Cerrar sesion");
             int opcion = leerEntero("Seleccione una opcion: ");
             switch (opcion) {
@@ -177,12 +181,15 @@ public class Main {
                     registrarResultado(tiempoService, inscripcionService, administrador);
                     break;
                 case 9:
-                    publicarMensajeGeneral(comunicacionService, administrador);
+                    publicarMensajeGeneral(comunicacionService, administrador, administradores, corredores);
                     break;
                 case 10:
-                    enviarMensajeACorredor(comunicacionService, administrador, corredores);
+                    mostrarChatGeneral(comunicacionService);
                     break;
                 case 11:
+                    enviarMensajeACorredor(comunicacionService, administrador, corredores);
+                    break;
+                case 12:
                     agregarMultimediaAEvento(eventoService);
                     break;
                 case 0:
@@ -218,8 +225,10 @@ public class Main {
             System.out.println("3. Registrar pago de inscripcion");
             System.out.println("4. Ver mis inscripciones");
             System.out.println("5. Ver mis resultados");
-            System.out.println("6. Ver mensajes recibidos");
-            System.out.println("7. Enviar mensaje al administrador");
+            System.out.println("6. Ver mis datos personales");
+            System.out.println("7. Ver mensajes recibidos");
+            System.out.println("8. Ver chat general");
+            System.out.println("9. Enviar mensaje al administrador");
             System.out.println("0. Cerrar sesion");
             int opcion = leerEntero("Seleccione una opcion: ");
             switch (opcion) {
@@ -239,9 +248,15 @@ public class Main {
                     mostrarResultadosCorredor(corredor);
                     break;
                 case 6:
-                    mostrarMensajes(corredor);
+                    mostrarDatosPersonales(corredor);
                     break;
                 case 7:
+                    mostrarMensajes(corredor);
+                    break;
+                case 8:
+                    mostrarChatGeneral(comunicacionService);
+                    break;
+                case 9:
                     enviarMensajeAdministrador(comunicacionService, corredor, administrador);
                     break;
                 case 0:
@@ -518,7 +533,9 @@ public class Main {
         }
     }
 
-    private static void publicarMensajeGeneral(ComunicacionService comunicacionService, Administrador administrador) {
+    private static void publicarMensajeGeneral(ComunicacionService comunicacionService, Administrador administrador,
+                                               Map<String, Administrador> administradores,
+                                               Map<String, Corredor> corredores) {
         System.out.println("\n--- Publicar Mensaje General ---");
         System.out.print("Contenido del mensaje: ");
         String contenido = SCANNER.nextLine().trim();
@@ -526,10 +543,18 @@ public class Main {
             System.out.println("El contenido no puede estar vacio.");
             return;
         }
-        comunicacionService.publicarMensajeGeneral("MSG-" + System.currentTimeMillis(), contenido, administrador);
+        Set<Usuario> destinatarios = new LinkedHashSet<>();
+        destinatarios.add(administrador);
+        destinatarios.addAll(administradores.values());
+        destinatarios.addAll(corredores.values());
+        comunicacionService.publicarMensajeGeneral(
+                "MSG-" + System.currentTimeMillis(),
+                contenido,
+                administrador,
+                destinatarios
+        );
         System.out.println("Mensaje publicado en el chat general.");
     }
-
     private static void enviarMensajeACorredor(ComunicacionService comunicacionService, Administrador administrador,
                                                Map<String, Corredor> corredores) {
         System.out.println("\n--- Enviar Mensaje a Corredor ---");
@@ -639,15 +664,63 @@ public class Main {
         ));
     }
 
-    private static void mostrarMensajes(Usuario usuario) {
-        System.out.println("\nMensajes recibidos:");
-        if (usuario.getMensajes().isEmpty()) {
-            System.out.println("No tienes mensajes.");
+    private static void mostrarDatosPersonales(Corredor corredor) {
+        System.out.println("\n--- Datos personales ---");
+        System.out.println("Nombre: " + corredor.getNombreCompleto());
+        System.out.println("Correo: " + corredor.getCorreo());
+        System.out.println("Telefono: " + corredor.getTelefono());
+        System.out.println("Fecha de nacimiento: " + corredor.getFechaNacimiento());
+        System.out.println("Genero: " + corredor.getGenero());
+        System.out.println("Tipo de sangre: " + corredor.getTipoSangre());
+        System.out.println("Contactos de emergencia:");
+        if (corredor.getContactos().isEmpty()) {
+            System.out.println("  No hay contactos de emergencia registrados.");
             return;
         }
-        usuario.getMensajes().forEach(mensaje -> System.out.println(
-                "- [" + mensaje.getEnviadoEn() + "] " + mensaje.getContenido()
+        corredor.getContactos().forEach(contacto -> System.out.println(
+                "  - " + contacto.getNombre() + " (" + contacto.getRelacion() + ") - Tel: " + contacto.getTelefono()
         ));
+    }
+
+    private static void mostrarMensajes(Usuario usuario) {
+        System.out.println("\nMensajes privados:");
+        if (usuario.getMensajes().isEmpty()) {
+            System.out.println("No tienes mensajes privados.");
+            return;
+        }
+        boolean hayPrivados = false;
+        for (Mensaje mensaje : usuario.getMensajes()) {
+            if (mensaje.esGeneral()) {
+                continue;
+            }
+            hayPrivados = true;
+            String cabecera;
+            if (usuario.equals(mensaje.getRemitente())) {
+                cabecera = "Para " + obtenerNombreUsuario(mensaje.getDestinatario());
+            } else {
+                cabecera = "De " + obtenerNombreUsuario(mensaje.getRemitente());
+            }
+            System.out.println("- [" + mensaje.getEnviadoEn() + "] " + cabecera + ": " + mensaje.getContenido());
+        }
+        if (!hayPrivados) {
+            System.out.println("No tienes mensajes privados.");
+        }
+    }
+
+    private static void mostrarChatGeneral(ComunicacionService comunicacionService) {
+        System.out.println("\n--- Chat General ---");
+        List<Mensaje> mensajes = comunicacionService.obtenerChatGeneral();
+        if (mensajes.isEmpty()) {
+            System.out.println("No hay mensajes en el chat general.");
+            return;
+        }
+        for (Mensaje mensaje : mensajes) {
+            if (!mensaje.esGeneral()) {
+                continue;
+            }
+            String autor = obtenerNombreUsuario(mensaje.getRemitente());
+            System.out.println("- [" + mensaje.getEnviadoEn() + "] " + autor + ": " + mensaje.getContenido());
+        }
     }
 
     private static void enviarMensajeAdministrador(ComunicacionService comunicacionService, Corredor corredor,
@@ -788,5 +861,16 @@ public class Main {
                 System.out.println("Formato de hora invalido. Use HH:mm.");
             }
         }
+    }
+
+    private static String obtenerNombreUsuario(Usuario usuario) {
+        if (usuario == null) {
+            return "Desconocido";
+        }
+        if (usuario instanceof Corredor) {
+            Corredor corredor = (Corredor) usuario;
+            return corredor.getNombreCompleto() + " (" + corredor.getCorreo() + ")";
+        }
+        return usuario.getCorreo();
     }
 }

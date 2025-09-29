@@ -1,9 +1,11 @@
-﻿package model;
+package model;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 public abstract class Usuario {
     private final String idUsuario;
@@ -11,6 +13,7 @@ public abstract class Usuario {
     private String contrasena;
     private boolean sesionActiva;
     private final List<Mensaje> mensajes = new ArrayList<>();
+    private final Set<String> mensajesRegistrados = new HashSet<>();
 
     protected Usuario(String idUsuario, String correo, String contrasena) {
         this.idUsuario = Objects.requireNonNull(idUsuario, "El identificador de usuario no puede ser nulo");
@@ -48,7 +51,13 @@ public abstract class Usuario {
     }
 
     public void registrarMensaje(Mensaje mensaje) {
-        mensajes.add(Objects.requireNonNull(mensaje, "El mensaje no puede ser nulo"));
+        Mensaje mensajeNoNulo = Objects.requireNonNull(mensaje, "El mensaje no puede ser nulo");
+        if (mensajeNoNulo.esGeneral()) {
+            return;
+        }
+        if (mensajesRegistrados.add(mensajeNoNulo.getIdMensaje())) {
+            mensajes.add(mensajeNoNulo);
+        }
     }
 
     public List<Mensaje> getMensajes() {

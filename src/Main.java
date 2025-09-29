@@ -84,9 +84,14 @@ public class Main {
     private static void inicializarDatos(EventoService eventoService,
                                          Map<String, Administrador> administradores,
                                          Map<String, Corredor> corredores) {
-        Administrador administrador = new Administrador("ADM-1", "admin@evento.com", "segura");
-        administradores.put(administrador.getCorreo(), administrador);
-        Evento evento = new Evento(
+        Administrador adminPrincipal = new Administrador("ADM-1", "admin@evento.com", "segura");
+        administradores.put(adminPrincipal.getCorreo(), adminPrincipal);
+        Administrador adminLogistica = new Administrador("ADM-2", "logistica@evento.com", "coordinacion");
+        administradores.put(adminLogistica.getCorreo(), adminLogistica);
+        Administrador adminComunicaciones = new Administrador("ADM-3", "comunicaciones@evento.com", "informar");
+        administradores.put(adminComunicaciones.getCorreo(), adminComunicaciones);
+
+        Evento carreraInformatico = new Evento(
                 "EVT-1",
                 "Carrera del Informatico",
                 LocalDate.of(2024, 10, 1),
@@ -95,26 +100,97 @@ public class Main {
                 "Campus San Carlos",
                 TipoActividad.CARRERA
         );
-        evento.actualizarEstado(EstadoEvento.Programada);
-        Carrera carrera10K = new Carrera("CAR-10", "Carrera 10K", 10.0, evento.getFecha());
-        carrera10K.agregarCategoria(new Categoria("General", 18, 65));
-        carrera10K.agregarCategoria(new Categoria("MAster", 36, 80));
-        carrera10K.abrirInscripcion();
-        evento.agregarCarrera(carrera10K);
-        evento.agregarMultimedia(new Multimedia(
+        carreraInformatico.actualizarEstado(EstadoEvento.Programada);
+        Carrera carrera5KInformatico = new Carrera("CAR-05", "Carrera 5K", 5.0, carreraInformatico.getFecha());
+        carrera5KInformatico.agregarCategoria(new Categoria("Estudiantes", 16, 30));
+        carrera5KInformatico.agregarCategoria(new Categoria("Libre", 18, 70));
+        carrera5KInformatico.abrirInscripcion();
+        Carrera carrera10KInformatico = new Carrera("CAR-10", "Carrera 10K", 10.0, carreraInformatico.getFecha());
+        carrera10KInformatico.agregarCategoria(new Categoria("General", 18, 65));
+        carrera10KInformatico.agregarCategoria(new Categoria("Master", 36, 80));
+        carrera10KInformatico.abrirInscripcion();
+        carreraInformatico.agregarCarrera(carrera5KInformatico);
+        carreraInformatico.agregarCarrera(carrera10KInformatico);
+        carreraInformatico.agregarMultimedia(new Multimedia(
                 "MM-1",
                 TipoMultimedia.Video,
                 "https://example.com/calentar",
                 "Rutina de calentamiento previa a la carrera"
         ));
-        evento.agregarMultimedia(new Multimedia(
+        carreraInformatico.agregarMultimedia(new Multimedia(
                 "MM-2",
                 TipoMultimedia.Documento,
                 "https://example.com/reglamento.pdf",
                 "Reglamento oficial del evento"
         ));
-        eventoService.registrarEvento(evento);
-        Corredor corredor = new Corredor(
+        carreraInformatico.agregarMultimedia(new Multimedia(
+                "MM-3",
+                TipoMultimedia.Imagen,
+                "https://example.com/recorrido-10k.png",
+                "Mapa del recorrido 10K"
+        ));
+        eventoService.registrarEvento(carreraInformatico);
+
+        Evento trailNocturno = new Evento(
+                "EVT-2",
+                "Trail Nocturno del Bosque",
+                LocalDate.of(2024, 11, 15),
+                LocalTime.of(19, 30),
+                "Recorrido nocturno por senderos iluminados",
+                "Parque Metropolitano",
+                TipoActividad.CARRERA
+        );
+        trailNocturno.actualizarEstado(EstadoEvento.Programada);
+        Carrera trail21K = new Carrera("CAR-21", "Trail 21K", 21.0, trailNocturno.getFecha());
+        trail21K.agregarCategoria(new Categoria("Elite", 21, 60));
+        trail21K.agregarCategoria(new Categoria("Master", 30, 75));
+        trail21K.abrirInscripcion();
+        Carrera trail10K = new Carrera("CAR-11", "Trail 10K", 10.0, trailNocturno.getFecha());
+        trail10K.agregarCategoria(new Categoria("General", 18, 65));
+        trail10K.abrirInscripcion();
+        trailNocturno.agregarCarrera(trail21K);
+        trailNocturno.agregarCarrera(trail10K);
+        trailNocturno.agregarMultimedia(new Multimedia(
+                "MM-4",
+                TipoMultimedia.Video,
+                "https://example.com/trail-nocturno",
+                "Consejos de seguridad para el trail nocturno"
+        ));
+        trailNocturno.agregarMultimedia(new Multimedia(
+                "MM-5",
+                TipoMultimedia.Imagen,
+                "https://example.com/trail-altimetria.png",
+                "Altimetria del recorrido 21K"
+        ));
+        eventoService.registrarEvento(trailNocturno);
+
+        Evento rutaCiclista = new Evento(
+                "EVT-3",
+                "Ruta Ciclista Solidaria",
+                LocalDate.of(2025, 1, 20),
+                LocalTime.of(6, 30),
+                "Ciclismo recreativo para apoyar iniciativas sociales",
+                "Avenida Central",
+                TipoActividad.CICLISMO
+        );
+        rutaCiclista.actualizarEstado(EstadoEvento.EnCurso);
+        Carrera circuito60K = new Carrera("CAR-60", "Circuito 60K", 60.0, rutaCiclista.getFecha());
+        circuito60K.agregarCategoria(new Categoria("General", 18, 70));
+        Carrera circuito25K = new Carrera("CAR-25", "Circuito 25K", 25.0, rutaCiclista.getFecha());
+        circuito25K.agregarCategoria(new Categoria("Juvenil", 16, 25));
+        circuito25K.agregarCategoria(new Categoria("Adultos", 26, 60));
+        circuito25K.abrirInscripcion();
+        rutaCiclista.agregarCarrera(circuito60K);
+        rutaCiclista.agregarCarrera(circuito25K);
+        rutaCiclista.agregarMultimedia(new Multimedia(
+                "MM-6",
+                TipoMultimedia.Documento,
+                "https://example.com/ruta-ciclista.pdf",
+                "Guia de puntos de asistencia y normas"
+        ));
+        eventoService.registrarEvento(rutaCiclista);
+
+        Corredor ana = new Corredor(
                 "USR-1",
                 "ana@example.com",
                 "contrasena",
@@ -125,8 +201,53 @@ public class Main {
                 Genero.Femenino,
                 TipoSangre.OPositivo
         );
-        corredor.agregarContacto(new ContactoEmergencia("Luis Perez", "555-1234", "Hermano"));
-        corredores.put(corredor.getCorreo(), corredor);
+        ana.agregarContacto(new ContactoEmergencia("Luis Perez", "555-1234", "Hermano"));
+        ana.agregarContacto(new ContactoEmergencia("Carolina Gomez", "555-4567", "Amiga"));
+        corredores.put(ana.getCorreo(), ana);
+
+        Corredor carlos = new Corredor(
+                "USR-2",
+                "carlos@example.com",
+                "segura",
+                "COR-2",
+                "Carlos Gomez",
+                "555-0202",
+                LocalDate.of(1988, 7, 12),
+                Genero.Masculino,
+                TipoSangre.A
+        );
+        carlos.agregarContacto(new ContactoEmergencia("Daniela Gomez", "555-6543", "Esposa"));
+        carlos.agregarContacto(new ContactoEmergencia("Miguel Gomez", "555-3311", "Hermano"));
+        corredores.put(carlos.getCorreo(), carlos);
+
+        Corredor maria = new Corredor(
+                "USR-3",
+                "maria@example.com",
+                "clave",
+                "COR-3",
+                "Maria Lopez",
+                "555-0303",
+                LocalDate.of(1999, 12, 5),
+                Genero.Femenino,
+                TipoSangre.B
+        );
+        maria.agregarContacto(new ContactoEmergencia("Laura Lopez", "555-8899", "Madre"));
+        corredores.put(maria.getCorreo(), maria);
+
+        Corredor diego = new Corredor(
+                "USR-4",
+                "diego@example.com",
+                "trail2024",
+                "COR-4",
+                "Diego Ramirez",
+                "555-0404",
+                LocalDate.of(1983, 2, 28),
+                Genero.Masculino,
+                TipoSangre.AB
+        );
+        diego.agregarContacto(new ContactoEmergencia("Ricardo Ramirez", "555-7788", "Padre"));
+        diego.agregarContacto(new ContactoEmergencia("Sofia Ramirez", "555-6677", "Hermana"));
+        corredores.put(diego.getCorreo(), diego);
     }
 
     private static void manejarSesionAdministrador(EventoService eventoService,

@@ -1,60 +1,81 @@
-package model;
+﻿package model;
 
 import java.util.Objects;
 
 public class Inscripcion {
     private final String idInscripcion;
-    private String estado;
-    private final Competidor competidor;
-    private final Categoria categoria;
-    private final Evento evento;
+    private final int numeroDorsal;
+    private TallaCamiseta tallaCamiseta;
+    private EstadoInscripcion estado;
+    private final Corredor corredor;
+    private final Carrera carrera;
     private Pago pago;
+    private Resultado resultado;
 
-    public Inscripcion(String idInscripcion, Competidor competidor, Categoria categoria, Evento evento) {
-        this.idInscripcion = Objects.requireNonNull(idInscripcion, "El identificador de la inscripción no puede ser nulo");
-        this.competidor = Objects.requireNonNull(competidor, "El competidor no puede ser nulo");
-        this.categoria = Objects.requireNonNull(categoria, "La categoría no puede ser nula");
-        this.evento = Objects.requireNonNull(evento, "El evento no puede ser nulo");
-        this.estado = "pendiente";
+    public Inscripcion(String idInscripcion, int numeroDorsal, Corredor corredor, Carrera carrera) {
+        this.idInscripcion = Objects.requireNonNull(idInscripcion, "El identificador de la inscripcion no puede ser nulo");
+        this.numeroDorsal = numeroDorsal;
+        this.corredor = Objects.requireNonNull(corredor, "El corredor no puede ser nulo");
+        this.carrera = Objects.requireNonNull(carrera, "La carrera no puede ser nula");
+        this.estado = EstadoInscripcion.Pendiente;
     }
 
     public String getIdInscripcion() {
         return idInscripcion;
     }
 
-    public String getEstado() {
+    public int getNumeroDorsal() {
+        return numeroDorsal;
+    }
+
+    public TallaCamiseta getTallaCamiseta() {
+        return tallaCamiseta;
+    }
+
+    public void asignarTallaCamiseta(TallaCamiseta tallaCamiseta) {
+        this.tallaCamiseta = Objects.requireNonNull(tallaCamiseta, "La talla de camiseta no puede ser nula");
+    }
+
+    public EstadoInscripcion getEstado() {
         return estado;
     }
 
-    public void setEstado(String estado) {
-        this.estado = Objects.requireNonNull(estado, "El estado no puede ser nulo");
+    public Corredor getCorredor() {
+        return corredor;
     }
 
-    public Competidor getCompetidor() {
-        return competidor;
-    }
-
-    public Categoria getCategoria() {
-        return categoria;
-    }
-
-    public Evento getEvento() {
-        return evento;
+    public Carrera getCarrera() {
+        return carrera;
     }
 
     public Pago getPago() {
         return pago;
     }
 
-    public void setPago(Pago pago) {
-        this.pago = pago;
+    public Resultado getResultado() {
+        return resultado;
     }
 
-    public boolean confirmarInscripcion() {
-        if (pago != null && pago.confirmarPago()) {
-            estado = "confirmada";
-            return true;
+    public boolean pagar(Pago pago) {
+        if (this.pago != null) {
+            return false;
         }
-        return false;
+        this.pago = Objects.requireNonNull(pago, "El pago no puede ser nulo");
+        this.estado = EstadoInscripcion.Pagada;
+        return true;
+    }
+
+    public void confirmar() {
+        if (pago == null) {
+            throw new IllegalStateException("La inscripcion debe contar con un pago para ser confirmada");
+        }
+        this.estado = EstadoInscripcion.Confirmada;
+    }
+
+    public void establecerResultado(Resultado resultado) {
+        if (estado != EstadoInscripcion.Confirmada) {
+            throw new IllegalStateException("La inscripcion debe estar confirmada antes de registrar resultados");
+        }
+        this.resultado = Objects.requireNonNull(resultado, "El resultado no puede ser nulo");
     }
 }

@@ -1,60 +1,57 @@
-package model;
+﻿package model;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Objects;
 
-public class Usuario {
+public abstract class Usuario {
     private final String idUsuario;
-    private String nombre;
+    private final String correo;
     private String contrasena;
-    private String correo;
     private boolean sesionActiva;
+    private final List<Mensaje> mensajes = new ArrayList<>();
 
-    public Usuario(String idUsuario, String nombre, String contrasena, String correo) {
+    protected Usuario(String idUsuario, String correo, String contrasena) {
         this.idUsuario = Objects.requireNonNull(idUsuario, "El identificador de usuario no puede ser nulo");
-        this.nombre = Objects.requireNonNull(nombre, "El nombre no puede ser nulo");
-        this.contrasena = Objects.requireNonNull(contrasena, "La contraseña no puede ser nula");
         this.correo = Objects.requireNonNull(correo, "El correo no puede ser nulo");
+        this.contrasena = Objects.requireNonNull(contrasena, "La contrasena no puede ser nula");
     }
 
     public String getIdUsuario() {
         return idUsuario;
     }
 
-    public String getNombre() {
-        return nombre;
-    }
-
-    public void setNombre(String nombre) {
-        this.nombre = Objects.requireNonNull(nombre, "El nombre no puede ser nulo");
-    }
-
-    public String getContrasena() {
-        return contrasena;
-    }
-
-    public void setContrasena(String contrasena) {
-        this.contrasena = Objects.requireNonNull(contrasena, "La contraseña no puede ser nula");
-    }
-
     public String getCorreo() {
         return correo;
     }
 
-    public void setCorreo(String correo) {
-        this.correo = Objects.requireNonNull(correo, "El correo no puede ser nulo");
-    }
-
-    public boolean isSesionActiva() {
-        return sesionActiva;
-    }
-
-    public boolean iniciarSesion(String usuario, String contrasena) {
-        boolean credencialesValidas = this.idUsuario.equals(usuario) && this.contrasena.equals(contrasena);
+    public boolean iniciarSesion(String correo, String contrasena) {
+        boolean credencialesValidas = this.correo.equals(correo) && this.contrasena.equals(contrasena);
         this.sesionActiva = credencialesValidas;
         return credencialesValidas;
     }
 
     public void cerrarSesion() {
         this.sesionActiva = false;
+    }
+
+    public boolean isSesionActiva() {
+        return sesionActiva;
+    }
+
+    public void cambiarContrasena(String contrasenaAnterior, String nuevaContrasena) {
+        if (!Objects.equals(this.contrasena, contrasenaAnterior)) {
+            throw new IllegalArgumentException("La contrasena anterior no coincide");
+        }
+        this.contrasena = Objects.requireNonNull(nuevaContrasena, "La contrasena no puede ser nula");
+    }
+
+    public void registrarMensaje(Mensaje mensaje) {
+        mensajes.add(Objects.requireNonNull(mensaje, "El mensaje no puede ser nulo"));
+    }
+
+    public List<Mensaje> getMensajes() {
+        return Collections.unmodifiableList(mensajes);
     }
 }

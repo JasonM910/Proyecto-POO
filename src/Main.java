@@ -1,19 +1,108 @@
-import model.*;
+﻿import model.Administrador;
+import model.Carrera;
+import model.Categoria;
+import model.ContactoEmergencia;
+import model.Corredor;
+import model.Evento;
+import model.EstadoEvento;
+import model.Genero;
+import model.Inscripcion;
+import model.Multimedia;
+import model.Pago;
+import model.Resultado;
+import model.TallaCamiseta;
+import model.TipoMultimedia;
+import model.TipoSangre;
+import service.ComunicacionService;
+import service.EventoService;
+import service.InscripcionService;
+import service.TiempoService;
+
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 public class Main {
     public static void main(String[] args) {
-        Categoria categoria = new Categoria("CAT-1", "General", "Categoría abierta", 18, 65, "Mixto");
-        Evento evento = new Evento("EVT-1", "Maratón", "2024-10-01", "Ciudad", "Evento principal", "Planificado", "Carrera");
-        Carrera carrera = new Carrera("CAR-1", "10K", 10_000, "2024-10-01", "08:00", "10:00", categoria);
-        evento.agregarCarrera(carrera);
+        EventoService eventoService = new EventoService();
+        InscripcionService inscripcionService = new InscripcionService();
+        TiempoService tiempoService = new TiempoService();
+        ComunicacionService comunicacionService = new ComunicacionService();
 
-        Competidor competidor = new Competidor("USR-1", "Ana Pérez", "segura", "ana@example.com", "001", categoria);
-        ContactoEmergencia contacto = new ContactoEmergencia("Luis Pérez", "555-1234", "Hermano");
-        competidor.setContactoEmergencia(contacto);
+        Administrador administrador = new Administrador("ADM-1", "admin@evento.com", "segura");
 
-        RegistroTiempo registroTiempo = new RegistroTiempo();
-        Resultados resultados = registroTiempo.registrarTiempo(competidor, 3600, java.time.LocalDate.now(), carrera);
+        Evento evento = new Evento(
+                "EVT-1",
+                "Carrera del Informatico",
+                LocalDate.of(2024, 10, 1),
+                "Evento anual para la comunidad de tecnologia",
+                "Campus San Carlos"
+        );
+        eventoService.registrarEvento(evento);
 
-        System.out.println("Resultado registrado para " + competidor.getNombre() + ": " + resultados.getTiempoFinal() + " segundos");
+        Carrera carrera10K = new Carrera(
+                "CAR-10",
+                "Carrera 10K",
+                10.0,
+                evento.getFecha()
+        );
+        carrera10K.agregarCategoria(new Categoria("General", 18, 99));
+        carrera10K.abrirInscripcion();
+        evento.agregarCarrera(carrera10K);
+        evento.actualizarEstado(EstadoEvento.Programada);
+
+        Corredor corredor = new Corredor(
+                "USR-1",
+                "ana@example.com",
+                "contrasena",
+                "COR-1",
+                "Ana Perez",
+                "555-0101",
+                LocalDate.of(1994, 3, 21),
+                Genero.Femenino,
+                TipoSangre.OPositivo
+        );
+        corredor.agregarContacto(new ContactoEmergencia("Luis Perez", "555-1234", "Hermano"));
+
+        Inscripcion inscripcion = inscripcionService.registrarInscripcion(
+                carrera10K,
+                corredor,
+                TallaCamiseta.M,
+                administrador
+        );
+
+        inscripcionService.registrarPago(
+                inscripcion.getIdInscripcion(),
+                new Pago("PAY-1", new BigDecimal("35.00"), "Inscripcion Carrera 10K", LocalDateTime.now())
+        );
+        inscripcionService.confirmarInscripcion(inscripcion.getIdInscripcion());
+
+        tiempoService.ingresarResultado(administrador, inscripcion, 3600, 12, 2);
+
+        evento.agregarMultimedia(new Multimedia(
+                "MM-1",
+                TipoMultimedia.Video,
+                "https://example.com/calentamiento",
+                "Video de calentamiento previo a la carrera"
+        ));
+
+        comunicacionService.publicarMensajeGeneral(
+                "MSG-1",
+                "Bienvenidos a la Carrera del Informatico",
+                administrador
+        );
+        comunicacionService.enviarMensajePrivado(
+                "MSG-2",
+                "Tu inscripcion ha sido confirmada",
+                administrador,
+                corredor
+        );
+
+        Resultado resultado = inscripcion.getResultado();
+        System.out.println("Evento: " + evento.getNombre() + " | Estado: " + evento.getEstado());
+        System.out.println("Inscripcion " + inscripcion.getIdInscripcion() + " -> Estado: " + inscripcion.getEstado());
+        System.out.println("Tiempo registrado: " + (resultado != null ? resultado.getTiempoSegundos() : "N/A"));
+        System.out.println("Mensajes del corredor: " + corredor.getMensajes().size());
+        System.out.println("Resultados del corredor: " + corredor.verMisResultados().size());
     }
 }

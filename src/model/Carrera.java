@@ -1,5 +1,6 @@
-package model;
+﻿package model;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -7,22 +8,23 @@ import java.util.Objects;
 
 public class Carrera {
     private final String idCarrera;
-    private String nombre;
-    private double distancia;
-    private String fecha;
-    private String horaInicio;
-    private String horaFin;
-    private Categoria categoria;
-    private final List<Competidor> competidores = new ArrayList<>();
+    private final String nombre;
+    private double distanciaKm;
+    private LocalDate fecha;
+    private boolean inscripcionAbierta;
+    private Evento evento;
+    private final List<Categoria> categorias = new ArrayList<>();
+    private final List<Inscripcion> inscripciones = new ArrayList<>();
 
-    public Carrera(String idCarrera, String nombre, double distancia, String fecha, String horaInicio, String horaFin, Categoria categoria) {
+    public Carrera(String idCarrera, String nombre, double distanciaKm, LocalDate fecha) {
         this.idCarrera = Objects.requireNonNull(idCarrera, "El identificador de la carrera no puede ser nulo");
-        this.nombre = Objects.requireNonNull(nombre, "El nombre no puede ser nulo");
-        this.distancia = distancia;
-        this.fecha = Objects.requireNonNull(fecha, "La fecha no puede ser nula");
-        this.horaInicio = Objects.requireNonNull(horaInicio, "La hora de inicio no puede ser nula");
-        this.horaFin = Objects.requireNonNull(horaFin, "La hora de fin no puede ser nula");
-        this.categoria = Objects.requireNonNull(categoria, "La categoría no puede ser nula");
+        this.nombre = Objects.requireNonNull(nombre, "El nombre de la carrera no puede ser nulo");
+        if (distanciaKm <= 0) {
+            throw new IllegalArgumentException("La distancia debe ser positiva");
+        }
+        this.distanciaKm = distanciaKm;
+        this.fecha = Objects.requireNonNull(fecha, "La fecha de la carrera no puede ser nula");
+        this.inscripcionAbierta = false;
     }
 
     public String getIdCarrera() {
@@ -33,58 +35,66 @@ public class Carrera {
         return nombre;
     }
 
-    public void setNombre(String nombre) {
-        this.nombre = Objects.requireNonNull(nombre, "El nombre no puede ser nulo");
+    public double getDistanciaKm() {
+        return distanciaKm;
     }
 
-    public double getDistancia() {
-        return distancia;
-    }
-
-    public void setDistancia(double distancia) {
-        if (distancia <= 0) {
+    public void setDistanciaKm(double distanciaKm) {
+        if (distanciaKm <= 0) {
             throw new IllegalArgumentException("La distancia debe ser positiva");
         }
-        this.distancia = distancia;
+        this.distanciaKm = distanciaKm;
     }
 
-    public String getFecha() {
+    public LocalDate getFecha() {
         return fecha;
     }
 
-    public void setFecha(String fecha) {
-        this.fecha = Objects.requireNonNull(fecha, "La fecha no puede ser nula");
+    public void setFecha(LocalDate fecha) {
+        this.fecha = Objects.requireNonNull(fecha, "La fecha de la carrera no puede ser nula");
     }
 
-    public String getHoraInicio() {
-        return horaInicio;
+    public boolean isInscripcionAbierta() {
+        return inscripcionAbierta;
     }
 
-    public void setHoraInicio(String horaInicio) {
-        this.horaInicio = Objects.requireNonNull(horaInicio, "La hora de inicio no puede ser nula");
+    public Evento getEvento() {
+        return evento;
     }
 
-    public String getHoraFin() {
-        return horaFin;
+    void definirEvento(Evento evento) {
+        this.evento = Objects.requireNonNull(evento, "El evento de la carrera no puede ser nulo");
     }
 
-    public void setHoraFin(String horaFin) {
-        this.horaFin = Objects.requireNonNull(horaFin, "La hora de fin no puede ser nula");
+    public void abrirInscripcion() {
+        this.inscripcionAbierta = true;
     }
 
-    public Categoria getCategoria() {
-        return categoria;
+    public void cerrarInscripcion() {
+        this.inscripcionAbierta = false;
     }
 
-    public void setCategoria(Categoria categoria) {
-        this.categoria = Objects.requireNonNull(categoria, "La categoría no puede ser nula");
+    public void agregarCategoria(Categoria categoria) {
+        categorias.add(Objects.requireNonNull(categoria, "La categoria no puede ser nula"));
     }
 
-    public List<Competidor> getCompetidores() {
-        return Collections.unmodifiableList(competidores);
+    public List<Categoria> getCategorias() {
+        return Collections.unmodifiableList(categorias);
     }
 
-    public void administrarCompetidores(Competidor competidor) {
-        competidores.add(Objects.requireNonNull(competidor, "El competidor no puede ser nulo"));
+    public List<Inscripcion> getInscripciones() {
+        return Collections.unmodifiableList(inscripciones);
+    }
+
+    public Inscripcion crearInscripcionPara(Corredor corredor) {
+        if (!inscripcionAbierta) {
+            throw new IllegalStateException("La inscripcion para esta carrera no esta abierta");
+        }
+        Objects.requireNonNull(corredor, "El corredor no puede ser nulo");
+        String idInscripcion = String.format("INS-%s-%03d", idCarrera, inscripciones.size() + 1);
+        int numeroDorsal = inscripciones.size() + 100;
+        Inscripcion inscripcion = new Inscripcion(idInscripcion, numeroDorsal, corredor, this);
+        inscripciones.add(inscripcion);
+        return inscripcion;
     }
 }

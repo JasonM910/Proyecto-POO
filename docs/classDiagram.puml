@@ -1,0 +1,175 @@
+@startuml
+skinparam classAttributeIconSize 0
+
+' Enumeraciones
+enum Genero {
+  Masculino
+  Femenino
+  Otro
+}
+
+enum TipoSangre {
+  ONegativo
+  OPositivo
+  A
+  B
+  AB
+}
+
+enum TallaCamiseta {
+  XS
+  S
+  M
+  L
+  XL
+  XXL
+}
+
+enum EstadoInscripcion {
+  Pendiente
+  Pagada
+  Confirmada
+}
+
+enum EstadoEvento {
+  Programada
+  EnCurso
+  Finalizada
+}
+
+enum TipoMultimedia {
+  Imagen
+  Video
+  Documento
+}
+
+interface IRegistroTiempo {
+  +registrarTiempo(idInscripcion: String, tiempoSegundos: double): Resultado
+}
+
+abstract class Usuario {
+  - idUsuario: String
+  - correo: String
+  - contrasena: String
+  - sesionActiva: boolean
+  - mensajes: List<Mensaje>
+  +iniciarSesion(correo: String, contrasena: String): boolean
+  +cerrarSesion(): void
+  +registrarMensaje(m: Mensaje): void
+}
+
+class Administrador {
+  - inscripcionesGestionadas: Map<String, Inscripcion>
+  +crearEvento(e: Evento): Evento
+  +registrarInscripcionGestionada(i: Inscripcion): void
+  +ingresarTiempo(i: Inscripcion, r: Resultado): void
+}
+
+class Corredor {
+  - idCorredor: String
+  - nombreCompleto: String
+  - telefono: String
+  - fechaNacimiento: LocalDate
+  - genero: Genero
+  - tipoSangre: TipoSangre
+  - contactos: List<ContactoEmergencia>
+  - inscripciones: List<Inscripcion>
+  +registrarseCarrera(c: Carrera): Inscripcion
+  +verMisResultados(): List<Resultado>
+}
+
+class ContactoEmergencia {
+  - nombre: String
+  - telefono: String
+  - relacion: String
+}
+
+class Mensaje {
+  - idMensaje: String
+  - contenido: String
+  - enviadoEn: LocalDateTime
+}
+
+class Evento {
+  - idEvento: String
+  - nombre: String
+  - fecha: LocalDate
+  - descripcion: String
+  - estado: EstadoEvento
+  - ubicacion: String
+  - carreras: List<Carrera>
+  - multimedia: List<Multimedia>
+  +agregarCarrera(c: Carrera): void
+  +agregarMultimedia(m: Multimedia): void
+}
+
+class Carrera {
+  - idCarrera: String
+  - nombre: String
+  - distanciaKm: double
+  - fecha: LocalDate
+  - inscripcionAbierta: boolean
+  - categorias: List<Categoria>
+  - inscripciones: List<Inscripcion>
+  +abrirInscripcion(): void
+  +cerrarInscripcion(): void
+  +agregarCategoria(cat: Categoria): void
+  +crearInscripcionPara(c: Corredor): Inscripcion
+}
+
+class Categoria {
+  - nombre: String
+  - edadMinima: int
+  - edadMaxima: int
+}
+
+class Multimedia {
+  - idMultimedia: String
+  - tipo: TipoMultimedia
+  - url: String
+  - descripcion: String
+}
+
+class Inscripcion {
+  - idInscripcion: String
+  - numeroDorsal: int
+  - tallaCamiseta: TallaCamiseta
+  - estado: EstadoInscripcion
+  - pago: Pago
+  - resultado: Resultado
+  +asignarTallaCamiseta(t: TallaCamiseta): void
+  +pagar(p: Pago): boolean
+  +confirmar(): void
+  +establecerResultado(r: Resultado): void
+}
+
+class Pago {
+  - idPago: String
+  - monto: BigDecimal
+  - descripcion: String
+  - fecha: LocalDateTime
+}
+
+class Resultado {
+  - idResultado: String
+  - tiempoSegundos: double
+  - posicionGeneral: int
+  - posicionCategoria: int
+  +actualizarDatos(t: double, pg: int, pc: int): void
+}
+
+Administrador --|> Usuario
+Corredor --|> Usuario
+Administrador ..|> IRegistroTiempo
+
+Usuario "1" --> "0..*" Mensaje : usa
+Corredor "1" *-- "0..*" ContactoEmergencia : contactos
+Corredor "1" --> "0..*" Inscripcion : inscripciones
+Carrera "1" *-- "0..*" Inscripcion : inscripciones
+Carrera "1" o-- "0..*" Categoria : categorias
+Evento "1" *-- "1..*" Carrera : carreras
+Evento "1" o-- "0..*" Multimedia : multimedia
+Inscripcion "1" --> "0..1" Pago : pago
+Inscripcion "1" *-- "0..1" Resultado : resultado
+
+@enduml

@@ -1,4 +1,4 @@
-package model;
+﻿package model;
 
 import java.util.Objects;
 
@@ -9,8 +9,8 @@ public class ContactoEmergencia {
 
     public ContactoEmergencia(String nombre, String telefono, String relacion) {
         this.nombre = Objects.requireNonNull(nombre, "El nombre no puede ser nulo");
-        this.telefono = Objects.requireNonNull(telefono, "El teléfono no puede ser nulo");
-        this.relacion = Objects.requireNonNull(relacion, "La relación no puede ser nula");
+        this.telefono = Objects.requireNonNull(telefono, "El telefono no puede ser nulo");
+        this.relacion = Objects.requireNonNull(relacion, "La relacion no puede ser nula");
     }
 
     public String getNombre() {
@@ -25,8 +25,9 @@ public class ContactoEmergencia {
         return relacion;
     }
 
-    public void actualizarContacto(String nombre, String telefono) {
+    public void actualizarContacto(String nombre, String telefono, String relacion) {
         this.nombre = Objects.requireNonNull(nombre, "El nombre no puede ser nulo");
-        this.telefono = Objects.requireNonNull(telefono, "El teléfono no puede ser nulo");
+        this.telefono = Objects.requireNonNull(telefono, "El telefono no puede ser nulo");
+        this.relacion = Objects.requireNonNull(relacion, "La relacion no puede ser nula");
     }
 }

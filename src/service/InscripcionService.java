@@ -2,6 +2,7 @@
 
 import model.Administrador;
 import model.Carrera;
+import model.Categoria;
 import model.Corredor;
 import model.Inscripcion;
 import model.Pago;
@@ -18,14 +19,15 @@ import java.util.stream.Collectors;
 public class InscripcionService {
     private final Map<String, Inscripcion> inscripciones = new HashMap<>();
 
-    public Inscripcion registrarInscripcion(Carrera carrera, Corredor corredor, TallaCamiseta talla,
-                                            Administrador administrador) {
+    public Inscripcion registrarInscripcion(Carrera carrera, Corredor corredor, Categoria categoria,
+                                            TallaCamiseta talla, Administrador administrador) {
         Objects.requireNonNull(carrera, "La carrera no puede ser nula");
         Objects.requireNonNull(corredor, "El corredor no puede ser nulo");
+        Objects.requireNonNull(categoria, "La categoria no puede ser nula");
         Objects.requireNonNull(talla, "La talla no puede ser nula");
         Objects.requireNonNull(administrador, "El administrador no puede ser nulo");
 
-        Inscripcion inscripcion = corredor.registrarseCarrera(carrera);
+        Inscripcion inscripcion = corredor.registrarseCarrera(carrera, categoria);
         inscripcion.asignarTallaCamiseta(talla);
         inscripciones.put(inscripcion.getIdInscripcion(), inscripcion);
         administrador.registrarInscripcionGestionada(inscripcion);

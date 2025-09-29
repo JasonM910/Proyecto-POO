@@ -1,6 +1,7 @@
 ﻿package model;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -10,18 +11,23 @@ public class Evento {
     private final String idEvento;
     private String nombre;
     private LocalDate fecha;
+    private LocalTime hora;
     private String descripcion;
     private EstadoEvento estado;
     private String ubicacion;
+    private TipoActividad tipoActividad;
     private final List<Carrera> carreras = new ArrayList<>();
     private final List<Multimedia> multimedia = new ArrayList<>();
 
-    public Evento(String idEvento, String nombre, LocalDate fecha, String descripcion, String ubicacion) {
+    public Evento(String idEvento, String nombre, LocalDate fecha, LocalTime hora, String descripcion,
+                  String ubicacion, TipoActividad tipoActividad) {
         this.idEvento = Objects.requireNonNull(idEvento, "El identificador del evento no puede ser nulo");
         this.nombre = Objects.requireNonNull(nombre, "El nombre no puede ser nulo");
         this.fecha = Objects.requireNonNull(fecha, "La fecha no puede ser nula");
+        this.hora = Objects.requireNonNull(hora, "La hora no puede ser nula");
         this.descripcion = Objects.requireNonNull(descripcion, "La descripcion no puede ser nula");
         this.ubicacion = Objects.requireNonNull(ubicacion, "La ubicacion no puede ser nula");
+        this.tipoActividad = Objects.requireNonNull(tipoActividad, "El tipo de actividad no puede ser nulo");
         this.estado = EstadoEvento.Programada;
     }
 
@@ -43,6 +49,14 @@ public class Evento {
 
     public void setFecha(LocalDate fecha) {
         this.fecha = Objects.requireNonNull(fecha, "La fecha no puede ser nula");
+    }
+
+    public LocalTime getHora() {
+        return hora;
+    }
+
+    public void setHora(LocalTime hora) {
+        this.hora = Objects.requireNonNull(hora, "La hora no puede ser nula");
     }
 
     public String getDescripcion() {
@@ -67,6 +81,14 @@ public class Evento {
 
     public void setUbicacion(String ubicacion) {
         this.ubicacion = Objects.requireNonNull(ubicacion, "La ubicacion no puede ser nula");
+    }
+
+    public TipoActividad getTipoActividad() {
+        return tipoActividad;
+    }
+
+    public void setTipoActividad(TipoActividad tipoActividad) {
+        this.tipoActividad = Objects.requireNonNull(tipoActividad, "El tipo de actividad no puede ser nulo");
     }
 
     public List<Carrera> getCarreras() {

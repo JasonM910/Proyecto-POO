@@ -1,7 +1,6 @@
 @startuml
 skinparam classAttributeIconSize 0
 
-' Enumeraciones
 enum Genero {
   Masculino
   Femenino
@@ -43,6 +42,14 @@ enum TipoMultimedia {
   Documento
 }
 
+enum TipoActividad {
+  CARRERA
+  CICLISMO
+  NATACION
+  TRIATLON
+  OTRO
+}
+
 interface IRegistroTiempo {
   +registrarTiempo(idInscripcion: String, tiempoSegundos: double): Resultado
 }
@@ -74,7 +81,7 @@ class Corredor {
   - tipoSangre: TipoSangre
   - contactos: List<ContactoEmergencia>
   - inscripciones: List<Inscripcion>
-  +registrarseCarrera(c: Carrera): Inscripcion
+  +registrarseCarrera(c: Carrera, cat: Categoria): Inscripcion
   +verMisResultados(): List<Resultado>
 }
 
@@ -94,9 +101,11 @@ class Evento {
   - idEvento: String
   - nombre: String
   - fecha: LocalDate
+  - hora: LocalTime
   - descripcion: String
   - estado: EstadoEvento
   - ubicacion: String
+  - tipoActividad: TipoActividad
   - carreras: List<Carrera>
   - multimedia: List<Multimedia>
   +agregarCarrera(c: Carrera): void
@@ -114,7 +123,7 @@ class Carrera {
   +abrirInscripcion(): void
   +cerrarInscripcion(): void
   +agregarCategoria(cat: Categoria): void
-  +crearInscripcionPara(c: Corredor): Inscripcion
+  +crearInscripcionPara(c: Corredor, cat: Categoria): Inscripcion
 }
 
 class Categoria {
@@ -135,6 +144,7 @@ class Inscripcion {
   - numeroDorsal: int
   - tallaCamiseta: TallaCamiseta
   - estado: EstadoInscripcion
+  - categoriaSeleccionada: Categoria
   - pago: Pago
   - resultado: Resultado
   +asignarTallaCamiseta(t: TallaCamiseta): void
@@ -171,5 +181,6 @@ Evento "1" *-- "1..*" Carrera : carreras
 Evento "1" o-- "0..*" Multimedia : multimedia
 Inscripcion "1" --> "0..1" Pago : pago
 Inscripcion "1" *-- "0..1" Resultado : resultado
+Inscripcion "1" --> "1" Categoria : selecciona
 
 @enduml

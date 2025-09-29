@@ -88,9 +88,10 @@ public class Corredor extends Usuario {
         return Collections.unmodifiableList(inscripciones);
     }
 
-    public Inscripcion registrarseCarrera(Carrera carrera) {
+    public Inscripcion registrarseCarrera(Carrera carrera, Categoria categoriaSeleccionada) {
         Objects.requireNonNull(carrera, "La carrera no puede ser nula");
-        Inscripcion inscripcion = carrera.crearInscripcionPara(this);
+        Objects.requireNonNull(categoriaSeleccionada, "La categoria no puede ser nula");
+        Inscripcion inscripcion = carrera.crearInscripcionPara(this, categoriaSeleccionada);
         inscripciones.add(inscripcion);
         return inscripcion;
     }

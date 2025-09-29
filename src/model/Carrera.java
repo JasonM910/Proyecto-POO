@@ -86,14 +86,18 @@ public class Carrera {
         return Collections.unmodifiableList(inscripciones);
     }
 
-    public Inscripcion crearInscripcionPara(Corredor corredor) {
+    public Inscripcion crearInscripcionPara(Corredor corredor, Categoria categoriaSeleccionada) {
         if (!inscripcionAbierta) {
             throw new IllegalStateException("La inscripcion para esta carrera no esta abierta");
         }
         Objects.requireNonNull(corredor, "El corredor no puede ser nulo");
+        Categoria categoria = categorias.stream()
+                .filter(cat -> cat.getNombre().equalsIgnoreCase(categoriaSeleccionada.getNombre()))
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("La categoria seleccionada no pertenece a la carrera"));
         String idInscripcion = String.format("INS-%s-%03d", idCarrera, inscripciones.size() + 1);
         int numeroDorsal = inscripciones.size() + 100;
-        Inscripcion inscripcion = new Inscripcion(idInscripcion, numeroDorsal, corredor, this);
+        Inscripcion inscripcion = new Inscripcion(idInscripcion, numeroDorsal, corredor, this, categoria);
         inscripciones.add(inscripcion);
         return inscripcion;
     }

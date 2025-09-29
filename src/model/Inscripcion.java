@@ -9,14 +9,17 @@ public class Inscripcion {
     private EstadoInscripcion estado;
     private final Corredor corredor;
     private final Carrera carrera;
+    private final Categoria categoriaSeleccionada;
     private Pago pago;
     private Resultado resultado;
 
-    public Inscripcion(String idInscripcion, int numeroDorsal, Corredor corredor, Carrera carrera) {
+    public Inscripcion(String idInscripcion, int numeroDorsal, Corredor corredor, Carrera carrera,
+                       Categoria categoriaSeleccionada) {
         this.idInscripcion = Objects.requireNonNull(idInscripcion, "El identificador de la inscripcion no puede ser nulo");
         this.numeroDorsal = numeroDorsal;
         this.corredor = Objects.requireNonNull(corredor, "El corredor no puede ser nulo");
         this.carrera = Objects.requireNonNull(carrera, "La carrera no puede ser nula");
+        this.categoriaSeleccionada = Objects.requireNonNull(categoriaSeleccionada, "La categoria seleccionada no puede ser nula");
         this.estado = EstadoInscripcion.Pendiente;
     }
 
@@ -46,6 +49,10 @@ public class Inscripcion {
 
     public Carrera getCarrera() {
         return carrera;
+    }
+
+    public Categoria getCategoriaSeleccionada() {
+        return categoriaSeleccionada;
     }
 
     public Pago getPago() {

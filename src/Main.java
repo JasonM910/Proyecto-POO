@@ -55,7 +55,7 @@ public class Main {
         boolean salir = false;
         while (!salir) {
             System.out.println("=================================");
-            System.out.println("  Sistema Carrera del Informatico");
+            System.out.println(" Sistema Carrera del Informatico");
             System.out.println("=================================");
             System.out.println("1. Iniciar sesion como administrador");
             System.out.println("2. Iniciar sesion como corredor");
@@ -64,11 +64,11 @@ public class Main {
             switch (opcion) {
                 case 1:
                     manejarSesionAdministrador(eventoService, inscripcionService, tiempoService,
-                        comunicacionService, administradores, corredores);
+                            comunicacionService, administradores, corredores);
                     break;
                 case 2:
                     manejarSesionCorredor(eventoService, inscripcionService, comunicacionService,
-                        administradores, corredores);
+                            administradores, corredores);
                     break;
                 case 0:
                     System.out.println("Hasta pronto.");
@@ -251,11 +251,11 @@ public class Main {
     }
 
     private static void manejarSesionAdministrador(EventoService eventoService,
-                                                    InscripcionService inscripcionService,
-                                                    TiempoService tiempoService,
-                                                    ComunicacionService comunicacionService,
-                                                    Map<String, Administrador> administradores,
-                                                    Map<String, Corredor> corredores) {
+                                                   InscripcionService inscripcionService,
+                                                   TiempoService tiempoService,
+                                                   ComunicacionService comunicacionService,
+                                                   Map<String, Administrador> administradores,
+                                                   Map<String, Corredor> corredores) {
         Administrador administrador = autenticarAdministrador(administradores);
         if (administrador == null) {
             return;
@@ -912,7 +912,7 @@ public class Main {
     }
 
     private static void enviarMensajeAdministrador(ComunicacionService comunicacionService, Corredor corredor,
-                                                    Administrador administrador) {
+                                                   Administrador administrador) {
         System.out.print("Contenido del mensaje: ");
         String contenido = SCANNER.nextLine().trim();
         if (contenido.isEmpty()) {

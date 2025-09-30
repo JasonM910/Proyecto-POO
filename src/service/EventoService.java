@@ -1,4 +1,4 @@
-﻿package service;
+package service;
 
 import model.Carrera;
 import model.Evento;

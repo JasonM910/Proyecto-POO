@@ -12,7 +12,7 @@ public class Mensaje {
     private final boolean general;
 
     public Mensaje(String idMensaje, String contenido, LocalDateTime enviadoEn, Usuario remitente, Usuario destinatario,
-                    boolean general) {
+                   boolean general) {
         this.idMensaje = Objects.requireNonNull(idMensaje, "El identificador del mensaje no puede ser nulo");
         this.contenido = Objects.requireNonNull(contenido, "El contenido no puede ser nulo");
         this.enviadoEn = Objects.requireNonNull(enviadoEn, "La fecha de envio no puede ser nula");

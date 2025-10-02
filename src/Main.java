@@ -375,6 +375,7 @@ public class Main {
                     .ifPresent(carrera -> {
                         Categoria categoria = carrera.getCategorias().get(0);
                         Inscripcion inscripcionDiego60K = inscripcionService.registrarInscripcion(carrera, diego, categoria, TallaCamiseta.L, adminPrincipal);
+                        inscripcionService.registrarPago(inscripcionDiego60K.getIdInscripcion(), new Pago("PAY-DIEGO-60K", new BigDecimal("40000"), "Pago corporativo", LocalDateTime.now().minusDays(2)));
                         inscripcionService.confirmarInscripcion(inscripcionDiego60K.getIdInscripcion());
                     });
 

@@ -50,7 +50,7 @@ public class Main {
         Map<String, Administrador> administradores = new HashMap<>();
         Map<String, Corredor> corredores = new HashMap<>();
 
-        inicializarDatos(eventoService, administradores, corredores);
+        inicializarDatos(eventoService, inscripcionService, tiempoService, comunicacionService, administradores, corredores);
 
         boolean salir = false;
         while (!salir) {
@@ -81,7 +81,11 @@ public class Main {
         }
     }
 
+
     private static void inicializarDatos(EventoService eventoService,
+                                         InscripcionService inscripcionService,
+                                         TiempoService tiempoService,
+                                         ComunicacionService comunicacionService,
                                          Map<String, Administrador> administradores,
                                          Map<String, Corredor> corredores) {
         Administrador adminPrincipal = new Administrador("ADM-1", "admin@evento.com", "segura");
@@ -176,6 +180,7 @@ public class Main {
         rutaCiclista.actualizarEstado(EstadoEvento.EnCurso);
         Carrera circuito60K = new Carrera("CAR-60", "Circuito 60K", 60.0, rutaCiclista.getFecha());
         circuito60K.agregarCategoria(new Categoria("General", 18, 70));
+        circuito60K.abrirInscripcion();
         Carrera circuito25K = new Carrera("CAR-25", "Circuito 25K", 25.0, rutaCiclista.getFecha());
         circuito25K.agregarCategoria(new Categoria("Juvenil", 16, 25));
         circuito25K.agregarCategoria(new Categoria("Adultos", 26, 60));
@@ -188,7 +193,42 @@ public class Main {
                 "https://example.com/ruta-ciclista.pdf",
                 "Guia de puntos de asistencia y normas"
         ));
+        rutaCiclista.agregarMultimedia(new Multimedia(
+                "MM-7",
+                TipoMultimedia.Imagen,
+                "https://example.com/altimetria-25k.png",
+                "Altimetria del circuito 25K"
+        ));
         eventoService.registrarEvento(rutaCiclista);
+
+        Evento triatlonUrbano = new Evento(
+                "EVT-4",
+                "Triatlon Urbano",
+                LocalDate.of(2024, 6, 8),
+                LocalTime.of(7, 0),
+                "Triatlon sprint con recorrido urbano",
+                "Bahia Central",
+                TipoActividad.TRIATLON
+        );
+        triatlonUrbano.actualizarEstado(EstadoEvento.Finalizada);
+        Carrera triSprint = new Carrera("CAR-TRI", "Triatlon Sprint", 25.75, triatlonUrbano.getFecha());
+        triSprint.agregarCategoria(new Categoria("Sprint", 18, 60));
+        triSprint.agregarCategoria(new Categoria("Relevos", 18, 70));
+        triSprint.abrirInscripcion();
+        triatlonUrbano.agregarCarrera(triSprint);
+        triatlonUrbano.agregarMultimedia(new Multimedia(
+                "MM-8",
+                TipoMultimedia.Video,
+                "https://example.com/triatlon-brief",
+                "Briefing oficial del triatlon"
+        ));
+        triatlonUrbano.agregarMultimedia(new Multimedia(
+                "MM-9",
+                TipoMultimedia.Documento,
+                "https://example.com/tri-reglamento.pdf",
+                "Reglamento y recomendaciones"
+        ));
+        eventoService.registrarEvento(triatlonUrbano);
 
         Corredor ana = new Corredor(
                 "USR-1",
@@ -248,6 +288,156 @@ public class Main {
         diego.agregarContacto(new ContactoEmergencia("Ricardo Ramirez", "555-7788", "Padre"));
         diego.agregarContacto(new ContactoEmergencia("Sofia Ramirez", "555-6677", "Hermana"));
         corredores.put(diego.getCorreo(), diego);
+
+        Corredor laura = new Corredor(
+                "USR-5",
+                "laura@example.com",
+                "maraton",
+                "COR-5",
+                "Laura Fernandez",
+                "555-0505",
+                LocalDate.of(1992, 9, 15),
+                Genero.Femenino,
+                TipoSangre.ONegativo
+        );
+        laura.agregarContacto(new ContactoEmergencia("Julio Fernandez", "555-7780", "Padre"));
+        laura.agregarContacto(new ContactoEmergencia("Silvia Ruiz", "555-8890", "Pareja"));
+        corredores.put(laura.getCorreo(), laura);
+
+        Corredor sergio = new Corredor(
+                "USR-6",
+                "sergio@example.com",
+                "rodaje",
+                "COR-6",
+                "Sergio Ramirez",
+                "555-0606",
+                LocalDate.of(1978, 4, 9),
+                Genero.Masculino,
+                TipoSangre.B
+        );
+        sergio.agregarContacto(new ContactoEmergencia("Helena Ramirez", "555-9900", "Esposa"));
+        corredores.put(sergio.getCorreo(), sergio);
+
+        eventoService.buscarPorId("EVT-1").ifPresent(evento -> {
+            evento.getCarreras().stream()
+                    .filter(c -> "Carrera 10K".equals(c.getNombre()))
+                    .findFirst()
+                    .ifPresent(carrera -> {
+                        Categoria categoria = carrera.getCategorias().stream()
+                                .filter(cat -> "General".equalsIgnoreCase(cat.getNombre()))
+                                .findFirst()
+                                .orElse(carrera.getCategorias().get(0));
+                        Inscripcion inscripcionAna10K = inscripcionService.registrarInscripcion(carrera, ana, categoria, TallaCamiseta.M, adminPrincipal);
+                        inscripcionService.registrarPago(inscripcionAna10K.getIdInscripcion(), new Pago("PAY-ANA-10K", new BigDecimal("35000"), "Pago completo", LocalDateTime.now().minusDays(5)));
+                        inscripcionService.confirmarInscripcion(inscripcionAna10K.getIdInscripcion());
+                        tiempoService.ingresarResultado(adminPrincipal, inscripcionAna10K, 3605.2, 5, 2);
+                    });
+
+            evento.getCarreras().stream()
+                    .filter(c -> "Carrera 5K".equals(c.getNombre()))
+                    .findFirst()
+                    .ifPresent(carrera -> {
+                        Categoria categoria = carrera.getCategorias().get(0);
+                        Inscripcion inscripcionMaria5K = inscripcionService.registrarInscripcion(carrera, maria, categoria, TallaCamiseta.S, adminComunicaciones);
+                        inscripcionService.registrarPago(inscripcionMaria5K.getIdInscripcion(), new Pago("PAY-MARIA-5K", new BigDecimal("20000"), "Transferencia", LocalDateTime.now().minusDays(3)));
+                        inscripcionService.confirmarInscripcion(inscripcionMaria5K.getIdInscripcion());
+                    });
+        });
+
+        eventoService.buscarPorId("EVT-2").ifPresent(evento -> {
+            evento.getCarreras().stream()
+                    .filter(c -> "Trail 21K".equals(c.getNombre()))
+                    .findFirst()
+                    .ifPresent(carrera -> {
+                        Categoria categoria = carrera.getCategorias().get(0);
+                        Inscripcion inscripcionCarlos21K = inscripcionService.registrarInscripcion(carrera, carlos, categoria, TallaCamiseta.L, adminLogistica);
+                        inscripcionService.registrarPago(inscripcionCarlos21K.getIdInscripcion(), new Pago("PAY-CARLOS-21K", new BigDecimal("45000"), "Pago con tarjeta", LocalDateTime.now().minusDays(2)));
+                        inscripcionService.confirmarInscripcion(inscripcionCarlos21K.getIdInscripcion());
+                        tiempoService.ingresarResultado(adminLogistica, inscripcionCarlos21K, 7920.78, 12, 4);
+                    });
+
+            evento.getCarreras().stream()
+                    .filter(c -> "Trail 10K".equals(c.getNombre()))
+                    .findFirst()
+                    .ifPresent(carrera -> {
+                        if (!carrera.isInscripcionAbierta()) {
+                            carrera.abrirInscripcion();
+                        }
+                        Categoria categoria = carrera.getCategorias().get(0);
+                        inscripcionService.registrarInscripcion(carrera, diego, categoria, TallaCamiseta.XL, adminPrincipal);
+                    });
+        });
+
+        eventoService.buscarPorId("EVT-3").ifPresent(evento -> {
+            evento.getCarreras().stream()
+                    .filter(c -> "Circuito 60K".equals(c.getNombre()))
+                    .findFirst()
+                    .ifPresent(carrera -> {
+                        Categoria categoria = carrera.getCategorias().get(0);
+                        Inscripcion inscripcionDiego60K = inscripcionService.registrarInscripcion(carrera, diego, categoria, TallaCamiseta.L, adminPrincipal);
+                        inscripcionService.confirmarInscripcion(inscripcionDiego60K.getIdInscripcion());
+                    });
+
+            evento.getCarreras().stream()
+                    .filter(c -> "Circuito 25K".equals(c.getNombre()))
+                    .findFirst()
+                    .ifPresent(carrera -> {
+                        Categoria categoria = carrera.getCategorias().stream()
+                                .filter(cat -> "Adultos".equalsIgnoreCase(cat.getNombre()))
+                                .findFirst()
+                                .orElse(carrera.getCategorias().get(0));
+                        Inscripcion inscripcionLaura25K = inscripcionService.registrarInscripcion(carrera, laura, categoria, TallaCamiseta.M, adminLogistica);
+                        inscripcionService.registrarPago(inscripcionLaura25K.getIdInscripcion(), new Pago("PAY-LAURA-25K", new BigDecimal("30000"), "Pago en linea", LocalDateTime.now().minusDays(1)));
+                    });
+        });
+
+        eventoService.buscarPorId("EVT-4").ifPresent(evento -> {
+            evento.getCarreras().stream()
+                    .findFirst()
+                    .ifPresent(carrera -> {
+                        Categoria categoria = carrera.getCategorias().get(0);
+                        Inscripcion inscripcionSergioTri = inscripcionService.registrarInscripcion(carrera, sergio, categoria, TallaCamiseta.XL, adminPrincipal);
+                        inscripcionService.registrarPago(inscripcionSergioTri.getIdInscripcion(), new Pago("PAY-SERGIO-TRI", new BigDecimal("52000"), "Registro anticipado", LocalDateTime.now().minusWeeks(2)));
+                        inscripcionService.confirmarInscripcion(inscripcionSergioTri.getIdInscripcion());
+                        tiempoService.ingresarResultado(adminPrincipal, inscripcionSergioTri, 4120.5, 18, 5);
+                    });
+        });
+
+        Set<Usuario> participantesChat = new LinkedHashSet<>();
+        participantesChat.addAll(administradores.values());
+        participantesChat.addAll(corredores.values());
+
+        comunicacionService.publicarMensajeGeneral(
+                "MSG-100",
+                "Bienvenidos al calendario 2024, revisen las nuevas fechas ya publicadas",
+                adminComunicaciones,
+                participantesChat
+        );
+        comunicacionService.publicarMensajeGeneral(
+                "MSG-101",
+                "Recuerden completar su ficha medica antes del inicio de cada evento",
+                adminPrincipal,
+                participantesChat
+        );
+
+        comunicacionService.enviarMensajePrivado(
+                "MSG-200",
+                "Hola Ana, confirma si necesitas apoyo de hidratacion extra",
+                adminLogistica,
+                ana
+        );
+        comunicacionService.enviarMensajePrivado(
+                "MSG-201",
+                "Gracias por la informacion, ya cargue mi comprobante de pago",
+                carlos,
+                adminLogistica
+        );
+        comunicacionService.enviarMensajePrivado(
+                "MSG-202",
+                "Nos vemos en la charla tecnica del trail",
+                diego,
+                adminComunicaciones
+        );
     }
 
     private static void manejarSesionAdministrador(EventoService eventoService,

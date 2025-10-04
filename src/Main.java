@@ -43,10 +43,10 @@ import java.util.Scanner;
  * Permite gestionar eventos, inscripciones, tiempos y comunicacion entre usuarios.
  */
 public class Main {
-    // Scanner estático para leer entradas del usuario
+    // Scanner estatico para leer entradas del usuario
     private static final Scanner SCANNER = new Scanner(System.in);
 
-    // Método principal para ejecutar la aplicación
+    // Metodo principal para ejecutar la aplicacion
     public static void main(String[] args) {
         EventoService eventoService = new EventoService();
         InscripcionService inscripcionService = new InscripcionService();
@@ -61,12 +61,12 @@ public class Main {
         boolean salir = false;
         while (!salir) {
             System.out.println("=================================");
-            System.out.println(" Sistema Carrera del Informático");
+            System.out.println(" Sistema Carrera del Informatico");
             System.out.println("=================================");
-            System.out.println("1. Iniciar sesión como administrador");
-            System.out.println("2. Iniciar sesión como corredor");
+            System.out.println("1. Iniciar sesion como administrador");
+            System.out.println("2. Iniciar sesion como corredor");
             System.out.println("0. Salir");
-            int opcion = leerEntero("Seleccione una opción: ");
+            int opcion = leerEntero("Seleccione una opcion: ");
             switch (opcion) {
                 case 1:
                     manejarSesionAdministrador(eventoService, inscripcionService, tiempoService,
@@ -81,7 +81,7 @@ public class Main {
                     salir = true;
                     break;
                 default:
-                    System.out.println("Opción no valida. Intente nuevamente.");
+                    System.out.println("Opcion no valida. Intente nuevamente.");
                     break;
             }
         }
@@ -98,17 +98,17 @@ public class Main {
                                          Map<String, Corredor> corredores) {
         Administrador adminPrincipal = new Administrador("ADM-1", "admin@evento.com", "segura");
         administradores.put(adminPrincipal.getCorreo(), adminPrincipal);
-        Administrador adminLogistica = new Administrador("ADM-2", "logistica@evento.com", "coordinación");
+        Administrador adminLogistica = new Administrador("ADM-2", "logistica@evento.com", "coordinacion");
         administradores.put(adminLogistica.getCorreo(), adminLogistica);
         Administrador adminComunicaciones = new Administrador("ADM-3", "comunicaciones@evento.com", "informar");
         administradores.put(adminComunicaciones.getCorreo(), adminComunicaciones);
 
         Evento carreraInformatico = new Evento(
                 "EVT-1",
-                "Carrera del Informático",
+                "Carrera del Informatico",
                 LocalDate.of(2024, 10, 1),
                 LocalTime.of(8, 0),
-                "Evento anual para la comunidad de tecnología",
+                "Evento anual para la comunidad de tecnologia",
                 "Campus San Carlos",
                 TipoActividad.CARRERA
         );
@@ -172,7 +172,7 @@ public class Main {
                 "MM-5",
                 TipoMultimedia.Imagen,
                 "https://example.com/trail-altimetria.png",
-                "Altimetría del recorrido 21K"
+                "Altimetria del recorrido 21K"
         ));
         eventoService.registrarEvento(trailNocturno);
 
@@ -205,21 +205,21 @@ public class Main {
                 "MM-7",
                 TipoMultimedia.Imagen,
                 "https://example.com/altimetria-25k.png",
-                "Altimetría del circuito 25K"
+                "Altimetria del circuito 25K"
         ));
         eventoService.registrarEvento(rutaCiclista);
 
         Evento triatlonUrbano = new Evento(
                 "EVT-4",
-                "Triatlón Urbano",
+                "Triatlon Urbano",
                 LocalDate.of(2024, 6, 8),
                 LocalTime.of(7, 0),
-                "Triatlón sprint con recorrido urbano",
+                "Triatlon sprint con recorrido urbano",
                 "Bahia Central",
                 TipoActividad.TRIATLON
         );
         triatlonUrbano.actualizarEstado(EstadoEvento.Finalizada);
-        Carrera triSprint = new Carrera("CAR-TRI", "Triatlón Sprint", 25.75, triatlonUrbano.getFecha());
+        Carrera triSprint = new Carrera("CAR-TRI", "Triatlon Sprint", 25.75, triatlonUrbano.getFecha());
         triSprint.agregarCategoria(new Categoria("Sprint", 18, 60));
         triSprint.agregarCategoria(new Categoria("Relevos", 18, 70));
         triSprint.abrirInscripcion();
@@ -228,7 +228,7 @@ public class Main {
                 "MM-8",
                 TipoMultimedia.Video,
                 "https://example.com/triatlon-brief",
-                "Briefing oficial del triatlón"
+                "Briefing oficial del triatlon"
         ));
         triatlonUrbano.agregarMultimedia(new Multimedia(
                 "MM-9",
@@ -241,7 +241,7 @@ public class Main {
         Corredor ana = new Corredor(
                 "USR-1",
                 "ana@example.com",
-                "contraseña",
+                "contrasena",
                 "COR-1",
                 "Ana Perez",
                 "555-0101",
@@ -300,7 +300,7 @@ public class Main {
         Corredor laura = new Corredor(
                 "USR-5",
                 "laura@example.com",
-                "maratón",
+                "maraton",
                 "COR-5",
                 "Laura Fernandez",
                 "555-0505",
@@ -334,7 +334,7 @@ public class Main {
                         Categoria categoria = carrera.getCategorias().stream()
                                 .filter(cat -> "General".equalsIgnoreCase(cat.getNombre()))
                                 .findFirst()
-                                .orElse(carrera.getCategorias().getFirst());
+                                .orElse(carrera.getCategorias().get(0));
                         Inscripcion inscripcionAna10K = inscripcionService.registrarInscripcion(carrera, ana, categoria, TallaCamiseta.M, adminPrincipal);
                         inscripcionService.registrarPago(inscripcionAna10K.getIdInscripcion(), new Pago("PAY-ANA-10K", new BigDecimal("35000"), "Pago completo", LocalDateTime.now().minusDays(5)));
                         inscripcionService.confirmarInscripcion(inscripcionAna10K.getIdInscripcion());
@@ -345,7 +345,7 @@ public class Main {
                     .filter(c -> "Carrera 5K".equals(c.getNombre()))
                     .findFirst()
                     .ifPresent(carrera -> {
-                        Categoria categoria = carrera.getCategorias().getFirst();
+                        Categoria categoria = carrera.getCategorias().get(0);
                         Inscripcion inscripcionMaria5K = inscripcionService.registrarInscripcion(carrera, maria, categoria, TallaCamiseta.S, adminComunicaciones);
                         inscripcionService.registrarPago(inscripcionMaria5K.getIdInscripcion(), new Pago("PAY-MARIA-5K", new BigDecimal("20000"), "Transferencia", LocalDateTime.now().minusDays(3)));
                         inscripcionService.confirmarInscripcion(inscripcionMaria5K.getIdInscripcion());
@@ -357,7 +357,7 @@ public class Main {
                     .filter(c -> "Trail 21K".equals(c.getNombre()))
                     .findFirst()
                     .ifPresent(carrera -> {
-                        Categoria categoria = carrera.getCategorias().getFirst();
+                        Categoria categoria = carrera.getCategorias().get(0);
                         Inscripcion inscripcionCarlos21K = inscripcionService.registrarInscripcion(carrera, carlos, categoria, TallaCamiseta.L, adminLogistica);
                         inscripcionService.registrarPago(inscripcionCarlos21K.getIdInscripcion(), new Pago("PAY-CARLOS-21K", new BigDecimal("45000"), "Pago con tarjeta", LocalDateTime.now().minusDays(2)));
                         inscripcionService.confirmarInscripcion(inscripcionCarlos21K.getIdInscripcion());
@@ -371,7 +371,7 @@ public class Main {
                         if (!carrera.isInscripcionAbierta()) {
                             carrera.abrirInscripcion();
                         }
-                        Categoria categoria = carrera.getCategorias().getFirst();
+                        Categoria categoria = carrera.getCategorias().get(0);
                         inscripcionService.registrarInscripcion(carrera, diego, categoria, TallaCamiseta.XL, adminPrincipal);
                     });
         });
@@ -381,7 +381,7 @@ public class Main {
                     .filter(c -> "Circuito 60K".equals(c.getNombre()))
                     .findFirst()
                     .ifPresent(carrera -> {
-                        Categoria categoria = carrera.getCategorias().getFirst();
+                        Categoria categoria = carrera.getCategorias().get(0);
                         Inscripcion inscripcionDiego60K = inscripcionService.registrarInscripcion(carrera, diego, categoria, TallaCamiseta.L, adminPrincipal);
                         inscripcionService.registrarPago(inscripcionDiego60K.getIdInscripcion(), new Pago("PAY-DIEGO-60K", new BigDecimal("40000"), "Pago corporativo", LocalDateTime.now().minusDays(2)));
                         inscripcionService.confirmarInscripcion(inscripcionDiego60K.getIdInscripcion());
@@ -394,19 +394,22 @@ public class Main {
                         Categoria categoria = carrera.getCategorias().stream()
                                 .filter(cat -> "Adultos".equalsIgnoreCase(cat.getNombre()))
                                 .findFirst()
-                                .orElse(carrera.getCategorias().getFirst());
+                                .orElse(carrera.getCategorias().get(0));
                         Inscripcion inscripcionLaura25K = inscripcionService.registrarInscripcion(carrera, laura, categoria, TallaCamiseta.M, adminLogistica);
                         inscripcionService.registrarPago(inscripcionLaura25K.getIdInscripcion(), new Pago("PAY-LAURA-25K", new BigDecimal("30000"), "Pago en linea", LocalDateTime.now().minusDays(1)));
                     });
         });
 
-        eventoService.buscarPorId("EVT-4").flatMap(evento -> evento.getCarreras().stream()
-                .findFirst()).ifPresent(carrera -> {
-            Categoria categoria = carrera.getCategorias().getFirst();
-            Inscripcion inscripcionSergioTri = inscripcionService.registrarInscripcion(carrera, sergio, categoria, TallaCamiseta.XL, adminPrincipal);
-            inscripcionService.registrarPago(inscripcionSergioTri.getIdInscripcion(), new Pago("PAY-SERGIO-TRI", new BigDecimal("52000"), "Registro anticipado", LocalDateTime.now().minusWeeks(2)));
-            inscripcionService.confirmarInscripcion(inscripcionSergioTri.getIdInscripcion());
-            tiempoService.ingresarResultado(adminPrincipal, inscripcionSergioTri, 4120.5, 18, 5);
+        eventoService.buscarPorId("EVT-4").ifPresent(evento -> {
+            evento.getCarreras().stream()
+                    .findFirst()
+                    .ifPresent(carrera -> {
+                        Categoria categoria = carrera.getCategorias().get(0);
+                        Inscripcion inscripcionSergioTri = inscripcionService.registrarInscripcion(carrera, sergio, categoria, TallaCamiseta.XL, adminPrincipal);
+                        inscripcionService.registrarPago(inscripcionSergioTri.getIdInscripcion(), new Pago("PAY-SERGIO-TRI", new BigDecimal("52000"), "Registro anticipado", LocalDateTime.now().minusWeeks(2)));
+                        inscripcionService.confirmarInscripcion(inscripcionSergioTri.getIdInscripcion());
+                        tiempoService.ingresarResultado(adminPrincipal, inscripcionSergioTri, 4120.5, 18, 5);
+                    });
         });
 
         Set<Usuario> participantesChat = new LinkedHashSet<>();
@@ -428,19 +431,19 @@ public class Main {
 
         comunicacionService.enviarMensajePrivado(
                 "MSG-200",
-                "Hola Ana, confirma si necesitas apoyo de hidratación extra",
+                "Hola Ana, confirma si necesitas apoyo de hidratacion extra",
                 adminLogistica,
                 ana
         );
         comunicacionService.enviarMensajePrivado(
                 "MSG-201",
-                "Gracias por la información, ya cargue mi comprobante de pago",
+                "Gracias por la informacion, ya cargue mi comprobante de pago",
                 carlos,
                 adminLogistica
         );
         comunicacionService.enviarMensajePrivado(
                 "MSG-202",
-                "Nos vemos en la charla técnica del trail",
+                "Nos vemos en la charla tecnica del trail",
                 diego,
                 adminComunicaciones
         );
@@ -465,18 +468,18 @@ public class Main {
             System.out.println("1. Listar eventos y recursos");
             System.out.println("2. Crear evento");
             System.out.println("3. Agregar carrera a evento");
-            System.out.println("4. Abrir/cerrar inscripción de carrera");
+            System.out.println("4. Abrir/cerrar inscripcion de carrera");
             System.out.println("5. Registrar nuevo corredor");
-            System.out.println("6. Registrar inscripción de un corredor");
-            System.out.println("7. Registrar pago y confirmar inscripción");
+            System.out.println("6. Registrar inscripcion de un corredor");
+            System.out.println("7. Registrar pago y confirmar inscripcion");
             System.out.println("8. Registrar resultado");
             System.out.println("9. Publicar mensaje general");
             System.out.println("10. Actualizar estado de evento");
             System.out.println("11. Ver chat general");
             System.out.println("12. Enviar mensaje a corredor");
             System.out.println("13. Agregar recurso multimedia a evento");
-            System.out.println("0. Cerrar sesión");
-            int opcion = leerEntero("Seleccione una opción: ");
+            System.out.println("0. Cerrar sesion");
+            int opcion = leerEntero("Seleccione una opcion: ");
             switch (opcion) {
                 case 1:
                     listarEventos(eventoService);
@@ -522,7 +525,7 @@ public class Main {
                     salir = true;
                     break;
                 default:
-                    System.out.println("Opción no valida.");
+                    System.out.println("Opcion no valida.");
                     break;
             }
         }
@@ -550,15 +553,15 @@ public class Main {
             System.out.println("\n--- Menu Corredor ---");
             System.out.println("1. Listar eventos y carreras");
             System.out.println("2. Inscribirse en carrera");
-            System.out.println("3. Registrar pago de inscripción");
+            System.out.println("3. Registrar pago de inscripcion");
             System.out.println("4. Ver mis inscripciones");
             System.out.println("5. Ver mis resultados");
             System.out.println("6. Ver mis datos personales");
             System.out.println("7. Ver mensajes recibidos");
             System.out.println("8. Ver chat general");
             System.out.println("9. Enviar mensaje al administrador");
-            System.out.println("0. Cerrar sesión");
-            int opcion = leerEntero("Seleccione una opción: ");
+            System.out.println("0. Cerrar sesion");
+            int opcion = leerEntero("Seleccione una opcion: ");
             switch (opcion) {
                 case 1:
                     listarEventos(eventoService);
@@ -592,7 +595,7 @@ public class Main {
                     salir = true;
                     break;
                 default:
-                    System.out.println("Opción no valida.");
+                    System.out.println("Opcion no valida.");
                     break;
             }
         }
@@ -603,10 +606,10 @@ public class Main {
      * @return El administrador autenticado o null si falla la autenticacion.
      */
     private static Administrador autenticarAdministrador(Map<String, Administrador> administradores) {
-        System.out.println("\n--- Inicio de sesión Administrador ---");
+        System.out.println("\n--- Inicio de sesion Administrador ---");
         System.out.print("Correo: ");
         String correo = SCANNER.nextLine().trim();
-        System.out.print("Contraseña: ");
+        System.out.print("Contrasena: ");
         String contrasena = SCANNER.nextLine().trim();
         Administrador administrador = administradores.get(correo);
         if (administrador == null || !administrador.iniciarSesion(correo, contrasena)) {
@@ -621,10 +624,10 @@ public class Main {
      * @return El corredor autenticado o null si falla la autenticacion.
      */
     private static Corredor autenticarCorredor(Map<String, Corredor> corredores) {
-        System.out.println("\n--- Inicio de sesión Corredor ---");
+        System.out.println("\n--- Inicio de sesion Corredor ---");
         System.out.print("Correo: ");
         String correo = SCANNER.nextLine().trim();
-        System.out.print("Contraseña: ");
+        System.out.print("Contrasena: ");
         String contrasena = SCANNER.nextLine().trim();
         Corredor corredor = corredores.get(correo);
         if (corredor == null || !corredor.iniciarSesion(correo, contrasena)) {
@@ -651,9 +654,9 @@ public class Main {
                         .map(Categoria::getNombre)
                         .collect(java.util.stream.Collectors.joining(", "));
                 System.out.println("    * " + carrera.getIdCarrera() + " - " + carrera.getNombre() +
-                        " | Distancia: " + carrera.getDistanciaKm() + " km | Inscripción abierta: " +
+                        " | Distancia: " + carrera.getDistanciaKm() + " km | Inscripcion abierta: " +
                         (carrera.isInscripcionAbierta() ? "Si" : "No") +
-                        " | Categorías: " + categorias);
+                        " | Categorias: " + categorias);
             });
             if (!evento.getMultimedia().isEmpty()) {
                 System.out.println("    Recursos multimedia:");
@@ -675,10 +678,10 @@ public class Main {
             System.out.print("Nombre: ");
             String nombre = SCANNER.nextLine().trim();
             LocalDate fecha = leerFecha("Fecha (yyyy-MM-dd): ");
-            LocalTime hora = leerHora();
-            System.out.print("Descripción: ");
+            LocalTime hora = leerHora("Hora (HH:mm): ");
+            System.out.print("Descripcion: ");
             String descripcion = SCANNER.nextLine().trim();
-            System.out.print("Ubicación: ");
+            System.out.print("Ubicacion: ");
             String ubicacion = SCANNER.nextLine().trim();
             System.out.println("Tipos disponibles: " + Arrays.toString(TipoActividad.values()));
             System.out.print("Tipo de actividad: ");
@@ -699,7 +702,7 @@ public class Main {
         System.out.print("ID del evento: ");
         String idEvento = SCANNER.nextLine().trim();
         Optional<Evento> eventoOpt = eventoService.buscarPorId(idEvento);
-        if (eventoOpt.isEmpty()) {
+        if (!eventoOpt.isPresent()) {
             System.out.println("Evento no encontrado.");
             return;
         }
@@ -714,7 +717,7 @@ public class Main {
             Carrera carrera = new Carrera(idCarrera, nombre, distancia, fecha);
             boolean agregarMasCategorias = true;
             while (agregarMasCategorias) {
-                System.out.print("Nombre de categoria (vacío para terminar): ");
+                System.out.print("Nombre de categoria (vacio para terminar): ");
                 String nombreCategoria = SCANNER.nextLine().trim();
                 if (nombreCategoria.isEmpty()) {
                     agregarMasCategorias = false;
@@ -735,11 +738,11 @@ public class Main {
      * @param eventoService Servicio para gestionar eventos.
      */
     private static void cambiarEstadoInscripcion(EventoService eventoService) {
-        System.out.println("\n--- Abrir/Cerrar Inscripción ---");
+        System.out.println("\n--- Abrir/Cerrar Inscripcion ---");
         System.out.print("ID del evento: ");
         String idEvento = SCANNER.nextLine().trim();
         Optional<Evento> eventoOpt = eventoService.buscarPorId(idEvento);
-        if (eventoOpt.isEmpty()) {
+        if (!eventoOpt.isPresent()) {
             System.out.println("Evento no encontrado.");
             return;
         }
@@ -749,17 +752,17 @@ public class Main {
         Optional<Carrera> carreraOpt = evento.getCarreras().stream()
                 .filter(c -> c.getIdCarrera().equals(idCarrera))
                 .findFirst();
-        if (carreraOpt.isEmpty()) {
+        if (!carreraOpt.isPresent()) {
             System.out.println("Carrera no encontrada.");
             return;
         }
         Carrera carrera = carreraOpt.get();
         if (carrera.isInscripcionAbierta()) {
             carrera.cerrarInscripcion();
-            System.out.println("Inscripción cerrada.");
+            System.out.println("Inscripcion cerrada.");
         } else {
             carrera.abrirInscripcion();
-            System.out.println("Inscripción abierta.");
+            System.out.println("Inscripcion abierta.");
         }
     }
 
@@ -775,14 +778,14 @@ public class Main {
                 System.out.println("Ya existe un corredor con ese correo.");
                 return;
             }
-            System.out.print("Contraseña: ");
+            System.out.print("Contrasena: ");
             String contrasena = SCANNER.nextLine().trim();
             System.out.print("Nombre completo: ");
             String nombre = SCANNER.nextLine().trim();
-            System.out.print("Teléfono: ");
+            System.out.print("Telefono: ");
             String telefono = SCANNER.nextLine().trim();
             LocalDate fechaNacimiento = leerFecha("Fecha de nacimiento (yyyy-MM-dd): ");
-            System.out.println("Géneros disponibles: " + Arrays.toString(Genero.values()));
+            System.out.println("Generos disponibles: " + Arrays.toString(Genero.values()));
             System.out.print("Genero: ");
             Genero genero = Genero.valueOf(SCANNER.nextLine().trim().toUpperCase());
             System.out.println("Tipos de sangre disponibles: " + Arrays.toString(TipoSangre.values()));
@@ -791,7 +794,7 @@ public class Main {
 
             List<ContactoEmergencia> contactos = new ArrayList<>();
             while (true) {
-                System.out.print("Nombre de contacto de emergencia (vacío para terminar): ");
+                System.out.print("Nombre de contacto de emergencia (vacio para terminar): ");
                 String nombreContacto = SCANNER.nextLine().trim();
                 if (nombreContacto.isEmpty()) {
                     if (contactos.isEmpty()) {
@@ -800,16 +803,16 @@ public class Main {
                     }
                     break;
                 }
-                System.out.print("Teléfono del contacto: ");
+                System.out.print("Telefono del contacto: ");
                 String telefonoContacto = SCANNER.nextLine().trim();
                 if (telefonoContacto.isEmpty()) {
-                    System.out.println("El teléfono del contacto no puede estar vacío.");
+                    System.out.println("El telefono del contacto no puede estar vacio.");
                     continue;
                 }
-                System.out.print("Relación con el contacto: ");
+                System.out.print("Relacion con el contacto: ");
                 String relacion = SCANNER.nextLine().trim();
                 if (relacion.isEmpty()) {
-                    System.out.println("La relación con el contacto no puede estar vacía.");
+                    System.out.println("La relacion con el contacto no puede estar vacia.");
                     continue;
                 }
                 try {
@@ -817,6 +820,7 @@ public class Main {
                     System.out.println("Contacto agregado.");
                 } catch (IllegalArgumentException ex) {
                     System.out.println("No se pudo registrar el contacto: " + ex.getMessage());
+                    continue;
                 }
             }
 
@@ -839,7 +843,7 @@ public class Main {
      */
     private static void registrarInscripcion(InscripcionService inscripcionService, EventoService eventoService,
                                              Administrador administrador, Map<String, Corredor> corredores) {
-        System.out.println("\n--- Registrar Inscripción ---");
+        System.out.println("\n--- Registrar Inscripcion ---");
         System.out.print("Correo del corredor: ");
         String correo = SCANNER.nextLine().trim();
         Corredor corredor = corredores.get(correo);
@@ -852,7 +856,7 @@ public class Main {
             return;
         }
         if (!carrera.isInscripcionAbierta()) {
-            System.out.println("La inscripción para esta carrera no esta abierta.");
+            System.out.println("La inscripcion para esta carrera no esta abierta.");
             return;
         }
         Categoria categoria = seleccionarCategoria(carrera);
@@ -871,9 +875,9 @@ public class Main {
                     talla,
                     administrador
             );
-            System.out.println("Inscripción registrada con ID: " + inscripcion.getIdInscripcion());
+            System.out.println("Inscripcion registrada con ID: " + inscripcion.getIdInscripcion());
         } catch (IllegalArgumentException ex) {
-            System.out.println("Error al registrar la inscripción: " + ex.getMessage());
+            System.out.println("Error al registrar la inscripcion: " + ex.getMessage());
         }
     }
 
@@ -882,16 +886,16 @@ public class Main {
      */
     private static void registrarPago(InscripcionService inscripcionService) {
         System.out.println("\n--- Registrar Pago ---");
-        System.out.print("ID de la inscripción: ");
+        System.out.print("ID de la inscripcion: ");
         String idInscripcion = SCANNER.nextLine().trim();
-        BigDecimal monto = leerMonto();
-        System.out.print("Descripción: ");
+        BigDecimal monto = leerMonto("Monto del pago: ");
+        System.out.print("Descripcion: ");
         String descripcion = SCANNER.nextLine().trim();
         try {
             Pago pago = new Pago("PAY-" + idInscripcion, monto, descripcion, LocalDateTime.now());
             inscripcionService.registrarPago(idInscripcion, pago);
             inscripcionService.confirmarInscripcion(idInscripcion);
-            System.out.println("Pago registrado e inscripción confirmada.");
+            System.out.println("Pago registrado e inscripcion confirmada.");
         } catch (IllegalArgumentException | IllegalStateException ex) {
             System.out.println("No se pudo registrar el pago: " + ex.getMessage());
         }
@@ -905,21 +909,21 @@ public class Main {
     private static void registrarResultado(TiempoService tiempoService, InscripcionService inscripcionService,
                                            Administrador administrador) {
         System.out.println("\n--- Registrar Resultado ---");
-        System.out.print("ID de la inscripción: ");
+        System.out.print("ID de la inscripcion: ");
         String idInscripcion = SCANNER.nextLine().trim();
         Optional<Inscripcion> inscripcionOpt = inscripcionService.buscarPorId(idInscripcion);
-        if (inscripcionOpt.isEmpty()) {
-            System.out.println("Inscripción no encontrada.");
+        if (!inscripcionOpt.isPresent()) {
+            System.out.println("Inscripcion no encontrada.");
             return;
         }
         Inscripcion inscripcion = inscripcionOpt.get();
         if (inscripcion.getEstado() != EstadoInscripcion.Confirmada) {
-            System.out.println("La inscripción debe estar confirmada antes de registrar un resultado.");
+            System.out.println("La inscripcion debe estar confirmada antes de registrar un resultado.");
             return;
         }
         double tiempo = leerDouble("Tiempo en segundos: ");
-        int posicionGeneral = leerEntero("Posición general: ");
-        int posicionCategoria = leerEntero("Posición por categoria: ");
+        int posicionGeneral = leerEntero("Posicion general: ");
+        int posicionCategoria = leerEntero("Posicion por categoria: ");
         try {
             tiempoService.ingresarResultado(administrador, inscripcion, tiempo, posicionGeneral, posicionCategoria);
             System.out.println("Resultado registrado correctamente.");
@@ -937,7 +941,7 @@ public class Main {
         System.out.print("ID del evento a actualizar: ");
         String idEvento = SCANNER.nextLine().trim();
         Optional<Evento> eventoOpt = eventoService.buscarPorId(idEvento);
-        if (eventoOpt.isEmpty()) {
+        if (!eventoOpt.isPresent()) {
             System.out.println("Evento no encontrado.");
             return;
         }
@@ -947,7 +951,7 @@ public class Main {
         Optional<EstadoEvento> estadoSeleccionado = Arrays.stream(EstadoEvento.values())
                 .filter(estado -> estado.name().equalsIgnoreCase(nuevoEstadoTexto))
                 .findFirst();
-        if (estadoSeleccionado.isEmpty()) {
+        if (!estadoSeleccionado.isPresent()) {
             System.out.println("Estado invalido.");
             return;
         }
@@ -973,7 +977,7 @@ public class Main {
         System.out.print("Contenido del mensaje: ");
         String contenido = SCANNER.nextLine().trim();
         if (contenido.isEmpty()) {
-            System.out.println("El contenido no puede estar vacío.");
+            System.out.println("El contenido no puede estar vacio.");
             return;
         }
         Set<Usuario> destinatarios = new LinkedHashSet<>();
@@ -1005,7 +1009,7 @@ public class Main {
         System.out.print("Contenido del mensaje: ");
         String contenido = SCANNER.nextLine().trim();
         if (contenido.isEmpty()) {
-            System.out.println("El contenido no puede estar vacío.");
+            System.out.println("El contenido no puede estar vacio.");
             return;
         }
         comunicacionService.enviarMensajePrivado(
@@ -1031,7 +1035,7 @@ public class Main {
             return;
         }
         if (!carrera.isInscripcionAbierta()) {
-            System.out.println("La inscripción para esta carrera no esta abierta.");
+            System.out.println("La inscripcion para esta carrera no esta abierta.");
             return;
         }
         Categoria categoria = seleccionarCategoria(carrera);
@@ -1050,9 +1054,9 @@ public class Main {
                     talla,
                     administrador
             );
-            System.out.println("Inscripción creada con ID: " + inscripcion.getIdInscripcion());
+            System.out.println("Inscripcion creada con ID: " + inscripcion.getIdInscripcion());
         } catch (IllegalArgumentException ex) {
-            System.out.println("No se pudo completar la inscripción: " + ex.getMessage());
+            System.out.println("No se pudo completar la inscripcion: " + ex.getMessage());
         }
     }
 
@@ -1062,23 +1066,23 @@ public class Main {
      */
     private static void registrarPagoCorredor(InscripcionService inscripcionService, Corredor corredor) {
         mostrarInscripcionesCorredor(corredor);
-        System.out.print("ID de la inscripción a pagar: ");
+        System.out.print("ID de la inscripcion a pagar: ");
         String idInscripcion = SCANNER.nextLine().trim();
         Optional<Inscripcion> inscripcionOpt = corredor.getInscripciones().stream()
                 .filter(inscripcion -> inscripcion.getIdInscripcion().equals(idInscripcion))
                 .findFirst();
-        if (inscripcionOpt.isEmpty()) {
-            System.out.println("No tienes una inscripción con ese ID.");
+        if (!inscripcionOpt.isPresent()) {
+            System.out.println("No tienes una inscripcion con ese ID.");
             return;
         }
-        BigDecimal monto = leerMonto();
-        System.out.print("Descripción: ");
+        BigDecimal monto = leerMonto("Monto del pago: ");
+        System.out.print("Descripcion: ");
         String descripcion = SCANNER.nextLine().trim();
         try {
             Pago pago = new Pago("PAY-" + idInscripcion, monto, descripcion, LocalDateTime.now());
             inscripcionService.registrarPago(idInscripcion, pago);
             inscripcionService.confirmarInscripcion(idInscripcion);
-            System.out.println("Pago registrado e inscripción confirmada.");
+            System.out.println("Pago registrado e inscripcion confirmada.");
         } catch (IllegalArgumentException | IllegalStateException ex) {
             System.out.println("No se pudo registrar el pago: " + ex.getMessage());
         }
@@ -1093,10 +1097,12 @@ public class Main {
             System.out.println("No tienes inscripciones registradas.");
             return;
         }
-        corredor.getInscripciones().forEach(inscripcion -> System.out.println("- " + inscripcion.getIdInscripcion() + " | Carrera: " + inscripcion.getCarrera().getNombre()
-                + " | Categoria: " + inscripcion.getCategoriaSeleccionada().getNombre()
-                + " | Estado: " + inscripcion.getEstado()
-                + " | Pago: " + (inscripcion.getPago() != null ? inscripcion.getPago().getMonto() : "Pendiente")));
+        corredor.getInscripciones().forEach(inscripcion -> {
+            System.out.println("- " + inscripcion.getIdInscripcion() + " | Carrera: " + inscripcion.getCarrera().getNombre()
+                    + " | Categoria: " + inscripcion.getCategoriaSeleccionada().getNombre()
+                    + " | Estado: " + inscripcion.getEstado()
+                    + " | Pago: " + (inscripcion.getPago() != null ? inscripcion.getPago().getMonto() : "Pendiente"));
+        });
     }
 
     /** Muestra los resultados del corredor.
@@ -1111,8 +1117,8 @@ public class Main {
         }
         resultados.forEach(resultado -> System.out.println(
                 "- " + resultado.getIdResultado() + " | Tiempo: " + resultado.getTiempoSegundos() +
-                        " s | Posición general: " + resultado.getPosicionGeneral() +
-                        " | Posición categoria: " + resultado.getPosicionCategoria()
+                        " s | Posicion general: " + resultado.getPosicionGeneral() +
+                        " | Posicion categoria: " + resultado.getPosicionCategoria()
         ));
     }
 
@@ -1123,7 +1129,7 @@ public class Main {
         System.out.println("\n--- Datos personales ---");
         System.out.println("Nombre: " + corredor.getNombreCompleto());
         System.out.println("Correo: " + corredor.getCorreo());
-        System.out.println("Teléfono: " + corredor.getTelefono());
+        System.out.println("Telefono: " + corredor.getTelefono());
         System.out.println("Fecha de nacimiento: " + corredor.getFechaNacimiento());
         System.out.println("Genero: " + corredor.getGenero());
         System.out.println("Tipo de sangre: " + corredor.getTipoSangre());
@@ -1194,7 +1200,7 @@ public class Main {
         System.out.print("Contenido del mensaje: ");
         String contenido = SCANNER.nextLine().trim();
         if (contenido.isEmpty()) {
-            System.out.println("El contenido no puede estar vacío.");
+            System.out.println("El contenido no puede estar vacio.");
             return;
         }
         comunicacionService.enviarMensajePrivado(
@@ -1214,7 +1220,7 @@ public class Main {
         System.out.print("ID del evento: ");
         String idEvento = SCANNER.nextLine().trim();
         Optional<Evento> eventoOpt = eventoService.buscarPorId(idEvento);
-        if (eventoOpt.isEmpty()) {
+        if (!eventoOpt.isPresent()) {
             System.out.println("Evento no encontrado.");
             return;
         }
@@ -1224,7 +1230,7 @@ public class Main {
         TipoMultimedia tipo = TipoMultimedia.valueOf(SCANNER.nextLine().trim().toUpperCase());
         System.out.print("URL: ");
         String url = SCANNER.nextLine().trim();
-        System.out.print("Descripción: ");
+        System.out.print("Descripcion: ");
         String descripcion = SCANNER.nextLine().trim();
         Multimedia multimedia = new Multimedia("MM-" + System.currentTimeMillis(), tipo, url, descripcion);
         evento.agregarMultimedia(multimedia);
@@ -1240,7 +1246,7 @@ public class Main {
         System.out.print("ID del evento: ");
         String idEvento = SCANNER.nextLine().trim();
         Optional<Evento> eventoOpt = eventoService.buscarPorId(idEvento);
-        if (eventoOpt.isEmpty()) {
+        if (!eventoOpt.isPresent()) {
             System.out.println("Evento no encontrado.");
             return null;
         }
@@ -1250,7 +1256,7 @@ public class Main {
         Optional<Carrera> carreraOpt = evento.getCarreras().stream()
                 .filter(carrera -> carrera.getIdCarrera().equals(idCarrera))
                 .findFirst();
-        if (carreraOpt.isEmpty()) {
+        if (!carreraOpt.isPresent()) {
             System.out.println("Carrera no encontrada.");
             return null;
         }
@@ -1263,10 +1269,10 @@ public class Main {
      */
     private static Categoria seleccionarCategoria(Carrera carrera) {
         if (carrera.getCategorias().isEmpty()) {
-            System.out.println("La carrera no tiene categorías registradas.");
+            System.out.println("La carrera no tiene categorias registradas.");
             return null;
         }
-        System.out.println("Categorías disponibles: ");
+        System.out.println("Categorias disponibles: ");
         for (int i = 0; i < carrera.getCategorias().size(); i++) {
             Categoria categoria = carrera.getCategorias().get(i);
             System.out.println((i + 1) + ". " + categoria.getNombre() + " (" + categoria.getEdadMinima() +
@@ -1274,7 +1280,7 @@ public class Main {
         }
         int opcion = leerEntero("Seleccione una categoria: ");
         if (opcion < 1 || opcion > carrera.getCategorias().size()) {
-            System.out.println("Opción invalida.");
+            System.out.println("Opcion invalida.");
             return null;
         }
         return carrera.getCategorias().get(opcion - 1);
@@ -1312,14 +1318,13 @@ public class Main {
         }
     }
 
-    /**
-     * Lee un BigDecimal desde la entrada estandar con manejo de errores.
-     *
+    /** Lee un BigDecimal desde la entrada estandar con manejo de errores.
+     * @param mensaje Mensaje a mostrar al usuario.
      * @return El BigDecimal ingresado por el usuario.
      */
-    private static BigDecimal leerMonto() {
+    private static BigDecimal leerMonto(String mensaje) {
         while (true) {
-            System.out.print("Monto del pago: ");
+            System.out.print(mensaje);
             String entrada = SCANNER.nextLine().trim();
             try {
                 return new BigDecimal(entrada);
@@ -1345,14 +1350,13 @@ public class Main {
         }
     }
 
-    /**
-     * Lee una hora desde la entrada estandar con manejo de errores.
-     *
+    /** Lee una hora desde la entrada estandar con manejo de errores.
+     * @param mensaje Mensaje a mostrar al usuario.
      * @return La hora ingresada por el usuario.
      */
-    private static LocalTime leerHora() {
+    private static LocalTime leerHora(String mensaje) {
         while (true) {
-            System.out.print("Hora (HH:mm): ");
+            System.out.print(mensaje);
             String entrada = SCANNER.nextLine().trim();
             try {
                 return LocalTime.parse(entrada);
@@ -1370,7 +1374,8 @@ public class Main {
         if (usuario == null) {
             return "Desconocido";
         }
-        if (usuario instanceof Corredor corredor) {
+        if (usuario instanceof Corredor) {
+            Corredor corredor = (Corredor) usuario;
             return corredor.getNombreCompleto() + " (" + corredor.getCorreo() + ")";
         }
         return usuario.getCorreo();

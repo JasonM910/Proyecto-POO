@@ -13,6 +13,10 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+/**
+ * La clase EventoService gestiona la creación, búsqueda y actualización de eventos deportivos.
+ * Permite registrar nuevos eventos, buscar eventos por ID, listar eventos por estado y agregar carreras a eventos.
+ */
 public class EventoService {
     // Mapa para almacenar los eventos por su ID
     private final Map<String, Evento> eventos = new HashMap<>();

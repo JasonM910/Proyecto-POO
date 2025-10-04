@@ -12,6 +12,10 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+/**
+ * La clase ComunicacionService gestiona la comunicación entre usuarios mediante mensajes.
+ * Permite publicar mensajes en un chat general y enviar mensajes privados entre usuarios.
+ */
 public class ComunicacionService {
     // Listas para almacenar los mensajes
     private final List<Mensaje> chatGeneral = new ArrayList<>();

@@ -37,10 +37,16 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.Scanner;
 
+/**
+ * La clase Main es el punto de entrada de la aplicacion.
+ * Proporciona una interfaz de consola para que administradores y corredores interactuen con el sistema.
+ * Permite gestionar eventos, inscripciones, tiempos y comunicacion entre usuarios.
+ */
 public class Main {
     // Scanner estatico para leer entradas del usuario
     private static final Scanner SCANNER = new Scanner(System.in);
 
+    // Metodo principal para ejecutar la aplicacion
     public static void main(String[] args) {
         EventoService eventoService = new EventoService();
         InscripcionService inscripcionService = new InscripcionService();

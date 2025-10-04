@@ -16,6 +16,10 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+/**
+ * La clase InscripcionService gestiona la inscripción de corredores en carreras.
+ * Permite registrar inscripciones, pagos y confirmar inscripciones.
+ */
 public class InscripcionService {
     // Mapa para almacenar las inscripciones por su ID
     private final Map<String, Inscripcion> inscripciones = new HashMap<>();

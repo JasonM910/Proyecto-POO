@@ -6,6 +6,10 @@ import model.Resultado;
 
 import java.util.Objects;
 
+/**
+ * La clase TiempoService gestiona el registro de tiempos y resultados de inscripciones en carreras.
+ * Permite registrar tiempos y actualizar resultados a través de un administrador.
+ */
 public class TiempoService {
     /**
      * Registra el tiempo de un participante en una inscripción específica.

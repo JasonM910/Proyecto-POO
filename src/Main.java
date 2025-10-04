@@ -38,7 +38,7 @@ import java.util.Set;
 import java.util.Scanner;
 
 public class Main {
-
+    // Scanner estatico para leer entradas del usuario
     private static final Scanner SCANNER = new Scanner(System.in);
 
     public static void main(String[] args) {
@@ -81,7 +81,9 @@ public class Main {
         }
     }
 
-
+    /**
+     * Metodo para inicializar datos de prueba en el sistema.
+     */
     private static void inicializarDatos(EventoService eventoService,
                                          InscripcionService inscripcionService,
                                          TiempoService tiempoService,
@@ -441,6 +443,9 @@ public class Main {
         );
     }
 
+    /**
+     * Maneja la sesion de un administrador, mostrando el menu y procesando las opciones.
+     */
     private static void manejarSesionAdministrador(EventoService eventoService,
                                                    InscripcionService inscripcionService,
                                                    TiempoService tiempoService,
@@ -520,6 +525,9 @@ public class Main {
         }
     }
 
+    /**
+     * Maneja la sesion de un corredor, mostrando el menu y procesando las opciones.
+     */
     private static void manejarSesionCorredor(EventoService eventoService,
                                               InscripcionService inscripcionService,
                                               ComunicacionService comunicacionService,
@@ -587,6 +595,10 @@ public class Main {
         }
     }
 
+    /** Autentica a un administrador usando correo y contrasena.
+     * @param administradores Mapa de administradores registrados.
+     * @return El administrador autenticado o null si falla la autenticacion.
+     */
     private static Administrador autenticarAdministrador(Map<String, Administrador> administradores) {
         System.out.println("\n--- Inicio de sesion Administrador ---");
         System.out.print("Correo: ");
@@ -601,6 +613,10 @@ public class Main {
         return administrador;
     }
 
+    /** Autentica a un corredor usando correo y contrasena.
+     * @param corredores Mapa de corredores registrados.
+     * @return El corredor autenticado o null si falla la autenticacion.
+     */
     private static Corredor autenticarCorredor(Map<String, Corredor> corredores) {
         System.out.println("\n--- Inicio de sesion Corredor ---");
         System.out.print("Correo: ");
@@ -645,6 +661,9 @@ public class Main {
         });
     }
 
+    /** Crea un nuevo evento solicitando los datos al usuario.
+     * @param eventoService Servicio para gestionar eventos.
+     */
     private static void crearEvento(EventoService eventoService) {
         try {
             System.out.println("\n--- Crear Evento ---");
@@ -669,6 +688,9 @@ public class Main {
         }
     }
 
+    /** Agrega una nueva carrera a un evento existente.
+     * @param eventoService Servicio para gestionar eventos.
+     */
     private static void agregarCarrera(EventoService eventoService) {
         System.out.println("\n--- Agregar Carrera ---");
         System.out.print("ID del evento: ");
@@ -706,6 +728,9 @@ public class Main {
         }
     }
 
+    /** Abre o cierra la inscripcion de una carrera dentro de un evento.
+     * @param eventoService Servicio para gestionar eventos.
+     */
     private static void cambiarEstadoInscripcion(EventoService eventoService) {
         System.out.println("\n--- Abrir/Cerrar Inscripcion ---");
         System.out.print("ID del evento: ");
@@ -735,6 +760,9 @@ public class Main {
         }
     }
 
+    /** Registra un nuevo corredor solicitando los datos al usuario.
+     * @param corredores Mapa para almacenar los corredores registrados.
+     */
     private static void registrarCorredor(Map<String, Corredor> corredores) {
         try {
             System.out.println("\n--- Registrar Corredor ---");
@@ -801,6 +829,12 @@ public class Main {
         }
     }
 
+    /** Registra una inscripcion de un corredor a una carrera.
+     * @param inscripcionService Servicio para gestionar inscripciones.
+     * @param eventoService Servicio para gestionar eventos.
+     * @param administrador Administrador que realiza la inscripcion.
+     * @param corredores Mapa de corredores registrados.
+     */
     private static void registrarInscripcion(InscripcionService inscripcionService, EventoService eventoService,
                                              Administrador administrador, Map<String, Corredor> corredores) {
         System.out.println("\n--- Registrar Inscripcion ---");
@@ -841,6 +875,9 @@ public class Main {
         }
     }
 
+    /** Registra un pago para una inscripcion y confirma la inscripcion.
+     * @param inscripcionService Servicio para gestionar inscripciones.
+     */
     private static void registrarPago(InscripcionService inscripcionService) {
         System.out.println("\n--- Registrar Pago ---");
         System.out.print("ID de la inscripcion: ");
@@ -858,6 +895,11 @@ public class Main {
         }
     }
 
+    /** Registra el resultado de un corredor en una inscripcion confirmada.
+     * @param tiempoService Servicio para gestionar tiempos y resultados.
+     * @param inscripcionService Servicio para gestionar inscripciones.
+     * @param administrador Administrador que registra el resultado.
+     */
     private static void registrarResultado(TiempoService tiempoService, InscripcionService inscripcionService,
                                            Administrador administrador) {
         System.out.println("\n--- Registrar Resultado ---");
@@ -884,6 +926,9 @@ public class Main {
         }
     }
 
+    /** Actualiza el estado de un evento.
+     * @param eventoService Servicio para gestionar eventos.
+     */
     private static void actualizarEstadoEvento(EventoService eventoService) {
         System.out.println("\n--- Actualizar Estado de Evento ---");
         listarEventos(eventoService);
@@ -912,6 +957,13 @@ public class Main {
             System.out.println("No se pudo actualizar el estado del evento: " + ex.getMessage());
         }
     }
+
+    /** Publica un mensaje en el chat general.
+     * @param comunicacionService Servicio para gestionar comunicaciones.
+     * @param administrador Administrador que publica el mensaje.
+     * @param administradores Mapa de administradores registrados.
+     * @param corredores Mapa de corredores registrados.
+     */
     private static void publicarMensajeGeneral(ComunicacionService comunicacionService, Administrador administrador,
                                                Map<String, Administrador> administradores,
                                                Map<String, Corredor> corredores) {
@@ -934,6 +986,10 @@ public class Main {
         );
         System.out.println("Mensaje publicado en el chat general.");
     }
+
+    /** Muestra el chat general con todos los mensajes publicados.
+     * @param comunicacionService Servicio para gestionar comunicaciones.
+     */
     private static void enviarMensajeACorredor(ComunicacionService comunicacionService, Administrador administrador,
                                                Map<String, Corredor> corredores) {
         System.out.println("\n--- Enviar Mensaje a Corredor ---");
@@ -959,6 +1015,9 @@ public class Main {
         System.out.println("Mensaje enviado.");
     }
 
+    /** Muestra el chat general con todos los mensajes publicados.
+     * @param comunicacionService Servicio para gestionar comunicaciones.
+     */
     private static void inscribirseEnCarrera(EventoService eventoService, InscripcionService inscripcionService,
                                              Administrador administrador, Corredor corredor) {
         Carrera carrera = seleccionarCarrera(eventoService);
@@ -991,6 +1050,10 @@ public class Main {
         }
     }
 
+    /** Registra un pago para una inscripcion de un corredor y confirma la inscripcion.
+     * @param inscripcionService Servicio para gestionar inscripciones.
+     * @param corredor Corredor que realiza el pago.
+     */
     private static void registrarPagoCorredor(InscripcionService inscripcionService, Corredor corredor) {
         mostrarInscripcionesCorredor(corredor);
         System.out.print("ID de la inscripcion a pagar: ");
@@ -1015,6 +1078,9 @@ public class Main {
         }
     }
 
+    /** Muestra las inscripciones del corredor.
+     * @param corredor Corredor cuyo inscripciones se van a mostrar.
+     */
     private static void mostrarInscripcionesCorredor(Corredor corredor) {
         System.out.println("\nTus inscripciones:");
         if (corredor.getInscripciones().isEmpty()) {
@@ -1029,6 +1095,9 @@ public class Main {
         });
     }
 
+    /** Muestra los resultados del corredor.
+     * @param corredor Corredor cuyos resultados se van a mostrar.
+     */
     private static void mostrarResultadosCorredor(Corredor corredor) {
         System.out.println("\nResultados registrados:");
         List<Resultado> resultados = corredor.verMisResultados();
@@ -1043,6 +1112,9 @@ public class Main {
         ));
     }
 
+    /** Muestra los datos personales del corredor.
+     * @param corredor Corredor cuyos datos se van a mostrar.
+     */
     private static void mostrarDatosPersonales(Corredor corredor) {
         System.out.println("\n--- Datos personales ---");
         System.out.println("Nombre: " + corredor.getNombreCompleto());
@@ -1061,6 +1133,9 @@ public class Main {
         ));
     }
 
+    /** Muestra los mensajes privados del usuario.
+     * @param usuario Usuario cuyos mensajes se van a mostrar.
+     */
     private static void mostrarMensajes(Usuario usuario) {
         System.out.println("\nMensajes privados:");
         if (usuario.getMensajes().isEmpty()) {
@@ -1086,6 +1161,9 @@ public class Main {
         }
     }
 
+    /** Muestra los mensajes del chat general en la consola.
+     * @param comunicacionService Servicio para gestionar comunicaciones.
+     */
     private static void mostrarChatGeneral(ComunicacionService comunicacionService) {
         System.out.println("\n--- Chat General ---");
         List<Mensaje> mensajes = comunicacionService.obtenerChatGeneral();
@@ -1102,6 +1180,11 @@ public class Main {
         }
     }
 
+    /** Envía un mensaje privado del corredor al administrador.
+     * @param comunicacionService Servicio para gestionar comunicaciones.
+     * @param corredor Corredor que envia el mensaje.
+     * @param administrador Administrador que recibe el mensaje.
+     */
     private static void enviarMensajeAdministrador(ComunicacionService comunicacionService, Corredor corredor,
                                                    Administrador administrador) {
         System.out.print("Contenido del mensaje: ");
@@ -1119,6 +1202,9 @@ public class Main {
         System.out.println("Mensaje enviado al administrador.");
     }
 
+    /** Agrega un recurso multimedia a un evento existente.
+     * @param eventoService Servicio para gestionar eventos.
+     */
     private static void agregarMultimediaAEvento(EventoService eventoService) {
         System.out.println("\n--- Agregar Multimedia a Evento ---");
         System.out.print("ID del evento: ");
@@ -1141,6 +1227,10 @@ public class Main {
         System.out.println("Recurso agregado al evento.");
     }
 
+    /** Permite al usuario seleccionar una carrera de un evento.
+     * @param eventoService Servicio para gestionar eventos.
+     * @return La carrera seleccionada o null si no se encuentra.
+     */
     private static Carrera seleccionarCarrera(EventoService eventoService) {
         listarEventos(eventoService);
         System.out.print("ID del evento: ");
@@ -1163,6 +1253,10 @@ public class Main {
         return carreraOpt.get();
     }
 
+    /** Permite al usuario seleccionar una categoria de una carrera.
+     * @param carrera Carrera de la cual seleccionar la categoria.
+     * @return La categoria seleccionada o null si no se encuentra.
+     */
     private static Categoria seleccionarCategoria(Carrera carrera) {
         if (carrera.getCategorias().isEmpty()) {
             System.out.println("La carrera no tiene categorias registradas.");
@@ -1182,6 +1276,10 @@ public class Main {
         return carrera.getCategorias().get(opcion - 1);
     }
 
+    /** Lee un entero desde la entrada estandar con manejo de errores.
+     * @param mensaje Mensaje a mostrar al usuario.
+     * @return El entero ingresado por el usuario.
+     */
     private static int leerEntero(String mensaje) {
         while (true) {
             System.out.print(mensaje);
@@ -1194,6 +1292,10 @@ public class Main {
         }
     }
 
+    /** Lee un double desde la entrada estandar con manejo de errores.
+     * @param mensaje Mensaje a mostrar al usuario.
+     * @return El double ingresado por el usuario.
+     */
     private static double leerDouble(String mensaje) {
         while (true) {
             System.out.print(mensaje);
@@ -1206,6 +1308,10 @@ public class Main {
         }
     }
 
+    /** Lee un BigDecimal desde la entrada estandar con manejo de errores.
+     * @param mensaje Mensaje a mostrar al usuario.
+     * @return El BigDecimal ingresado por el usuario.
+     */
     private static BigDecimal leerMonto(String mensaje) {
         while (true) {
             System.out.print(mensaje);
@@ -1218,6 +1324,10 @@ public class Main {
         }
     }
 
+    /** Lee una fecha desde la entrada estandar con manejo de errores.
+     * @param mensaje Mensaje a mostrar al usuario.
+     * @return La fecha ingresada por el usuario.
+     */
     private static LocalDate leerFecha(String mensaje) {
         while (true) {
             System.out.print(mensaje);
@@ -1230,6 +1340,10 @@ public class Main {
         }
     }
 
+    /** Lee una hora desde la entrada estandar con manejo de errores.
+     * @param mensaje Mensaje a mostrar al usuario.
+     * @return La hora ingresada por el usuario.
+     */
     private static LocalTime leerHora(String mensaje) {
         while (true) {
             System.out.print(mensaje);
@@ -1242,6 +1356,10 @@ public class Main {
         }
     }
 
+    /** Obtiene una representacion legible del nombre de un usuario.
+     * @param usuario Usuario del cual obtener el nombre.
+     * @return Nombre legible del usuario.
+     */
     private static String obtenerNombreUsuario(Usuario usuario) {
         if (usuario == null) {
             return "Desconocido";

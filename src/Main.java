@@ -1021,8 +1021,12 @@ public class Main {
         System.out.println("Mensaje enviado.");
     }
 
-    /** Muestra el chat general con todos los mensajes publicados.
-     * @param comunicacionService Servicio para gestionar comunicaciones.
+    /**
+     * Permite a un corredor inscribirse en una carrera.
+     * @param eventoService Servicio para gestionar eventos.
+     * @param inscripcionService Servicio para gestionar inscripciones.
+     * @param administrador Administrador que gestiona la inscripcion.
+     * @param corredor Corredor que se inscribe.
      */
     private static void inscribirseEnCarrera(EventoService eventoService, InscripcionService inscripcionService,
                                              Administrador administrador, Corredor corredor) {

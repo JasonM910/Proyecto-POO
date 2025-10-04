@@ -46,7 +46,6 @@ public class Main {
     // Scanner estatico para leer entradas del usuario
     private static final Scanner SCANNER = new Scanner(System.in);
 
-    // Metodo principal para ejecutar la aplicacion
     public static void main(String[] args) {
         EventoService eventoService = new EventoService();
         InscripcionService inscripcionService = new InscripcionService();
